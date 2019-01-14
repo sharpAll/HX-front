@@ -1,0 +1,64 @@
+<h2 class="u-ttb2">通用业务模块 - 表单与url</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>表单存取功能</dt>
+    <dd>
+        <p>提供表单数据转对象与将json数据赋值给表单的接口。</p>
+    </dd>
+    <dt>简单样例</dt>
+    <div>
+        <form id="Form">
+            <div>
+                <label style="display: inline-block">账号：</label>
+                <input style="display: inline-block" name="account" type="text"/>
+            </div>
+            <div>
+                <label style="display: inline-block">密码：</label>
+                <input style="display: inline-block" data-vali="true" name="password" type="password"/>
+            </div>
+        </form>
+        <button id="serializeJson">获取表单</button>
+        <button id="setForm">赋值表单</button>
+    </div>
+	<dt>调用方式</dt>
+	<dd>
+         <pre>
+             <code class="javascript">
+                /*
+                **获取表单中所有元素值，键为name属性，返回为对象
+                * formId:dom容器id
+                */
+              HXcommon.serializeJson('Form');
+                 /*
+                *将json对象赋值给form
+                * formId:dom容器id  jsonValue:需要给form赋值的json对象
+                */
+              HXcommon.setForm('Form',jsonValue);
+             </code>
+        </pre>
+	</dd>
+    <dt>url参数获取功能</dt>
+    <dd>
+        <p>提供url所有参数与单个参数获取的接口。</p>
+    </dd>
+    <dt>简单样例</dt>
+    <button id="getQueryJson">获取参数对象</button>
+    <button id="getUrlParam">获取taskid参数</button>
+    <dt>调用方式</dt>
+    <dd>
+         <pre>
+             <code class="javascript">
+                /*
+                *取得URL参数、并传化成JSON
+                * */
+              HXcommon.getQueryJson();
+                 /*
+                *获取某个URL参数
+                * */
+              HXcommon.getUrlParam('taskid');
+             </code>
+        </pre>
+    </dd>
+    <script src="views/common/common-formandurl.js"></script>
+</dl>
+</div>

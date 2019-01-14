@@ -1,0 +1,117 @@
+/* ::::: http://nec.netease.com/pub/core.css?90830ea7b240ac089071181a684e88b3 ::::: */
+
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, button, textarea, p, blockquote, th, td { padding: 0px; margin: 0px; }
+fieldset, img, html, body, iframe { border: 0px none; }
+table { border-collapse: collapse; border-spacing: 0px; }
+li { list-style: outside none none; }
+em, i, small, caption, th { font-weight: normal; font-style: normal; font-size: 100%; }
+h1, h2, h3, h4, h5, h6, em, strong, b { font-weight: bold; font-size: 100%; }
+body { overflow-wrap: break-word; font: 12px "Consolas"; color: rgb(85, 85, 85); background: rgb(255, 255, 255) none repeat scroll 0% 0%; }
+a, button { cursor: pointer; outline: 0px none; }
+a, a:hover { text-decoration: none; color: rgb(18, 142, 194); }
+.g-in::after, .m-list ul::after, .m-anform .cnt ul::after { display: block; visibility: hidden; height: 0px; overflow: hidden; clear: both; content: "."; }
+.g-in, .m-list ul, .m-anform .cnt ul {  }
+.g-nv, .m-nav li, .m-nav li a, .m-nav li, .m-nav li i, .m-error .error, .m-mask { background: rgba(0, 0, 0, 0) url('../img/nav.png') no-repeat scroll -9999px -9999px; }
+.g-bn, .g-boxa, .g-boxc, .m-menu li a { background: rgba(0, 0, 0, 0) url('../img/dotx.png') repeat-x scroll -9999px -9999px; }
+.m-enter li a, .m-feature h3, .m-care .care li a, .m-menu li.crt a, .m-tool .info h2 b, .m-tool .warm { background: rgba(0, 0, 0, 0) url('../img/icn1.png') no-repeat scroll -9999px -9999px; }
+.u-line, .u-line .linea, .u-line .lineb { background: rgba(0, 0, 0, 0) url('../img/line.png') no-repeat scroll -9999px -9999px; }
+.m-share li a { background: rgba(0, 0, 0, 0) url('icn2a.png') no-repeat scroll -9999px -9999px; }
+.u-ttb, .m-enter h3, .u-ttb2, .m-tool .info h2, .m-tool .list a { font-weight: normal; font-family: "Microsoft YaHei","微软雅黑",tahoma,arial,simsun,"宋体"; }
+a { transition: color 0.3s ease 0s; }
+.g-bnb, .g-bd .g-in, .m-article dl, .m-list .list { animation: 0.5s ease-out 0s normal none 1 running show; }
+html { overflow-y: scroll; }
+body { min-width: 900px; }
+.g-in { width: 900px; margin: 0px auto; }
+.g-hd, .g-nv { position: relative; background-position: 0px 0px; background-repeat: repeat-x; }
+.g-hd { height: 64px; background-color: rgb(107, 167, 183); }
+.g-nv { z-index: 100; height: 45px; background-color: rgb(248, 248, 248); box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.02); }
+.g-ft { padding: 30px 0px 10px; border-top: 1px solid rgb(219, 219, 219); background: rgba(0, 0, 0, 0) linear-gradient(rgb(249, 249, 249), rgb(255, 255, 255) 30px) repeat scroll 0% 0%; }
+.g-bd2 .g-in { width: auto; }
+.g-sd { position: relative; float: left; width: 160px; padding: 36px 16px 40px 40px; border-right: 1px solid rgb(231, 231, 231); }
+.g-mn { float: right; width: 100%; margin-left: -220px; }
+.g-mnc { min-height: 500px; margin-left: 216px; padding: 40px 50px 40px 40px; border-left: 1px solid rgb(231, 231, 231); background-position: 0px 0px; }
+.m-head { position: relative; width: 100%; }
+.m-head a, .m-head a:hover { color: rgb(255, 255, 255); }
+.m-head h1 { position: absolute; top: 0px; left: -137px; width: 257px; height: 50px; padding: 14px 0px 0px 137px; background-position: 0px -76px; }
+.m-head h1 a { display: block; height: 38px; overflow: hidden; text-indent: -2000px; }
+.m-nav { height: 37px; padding: 8px 0px 0px; line-height: 35px; text-align: center; text-shadow: 1px 1px rgb(255, 255, 255); }
+.m-nav, .m-nav li { font-size: 0px; letter-spacing: -0.307em; }
+.m-nav li, .m-nav li a { display: inline-block; height: 35px; }
+.m-nav li { position: relative; padding-left: 2px; background-position: -91px -55px; }
+.m-nav li a { padding: 0px 20px; font-weight: bold; font-size: 14px; letter-spacing: normal; word-spacing: normal; color: rgb(85, 97, 101); }
+.m-nav li a:hover { color: rgb(72, 140, 157); }
+.m-nav li i { display: none; position: absolute; left: 50%; top: 35px; width: 14px; height: 8px; margin-left: -6px; overflow: hidden; background-position: 0px -66px; }
+.m-nav li.first { background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%; }
+.m-nav li.crt i { display: block; }
+.m-ban .paoit i:nth-child(1) { left: 25px; animation-delay: 3s; }
+.m-ban .paoit i:nth-child(2) { left: 85px; animation-duration: 6s; animation-delay: 6s; background-position: -507px -64px; }
+.m-ban .paoit i:nth-child(3) { left: 148px; animation-duration: 5s; animation-delay: 7s; }
+.m-ban .paoit i:nth-child(4) { left: 190px; animation-delay: 4s; background-position: -507px -140px; }
+.m-ban .paoit i:nth-child(5) { left: 285px; animation-duration: 5s; animation-delay: 8s; }
+.m-ban .paoit i:nth-child(6) { left: 350px; background-position: -507px -64px; }
+.m-ban .paoit i:nth-child(7) { left: 400px; animation-delay: 5s; }
+.m-ft { line-height: 19px; text-align: center; color: rgb(153, 153, 153); }
+.m-ft a { margin: 0px 6px; color: rgb(153, 153, 153); }
+.m-ft a:hover { color: rgb(85, 85, 85); }
+.m-menu { width: 160px; color: rgb(68, 68, 68); }
+.m-menu li { float: left; width: 100%; }
+.m-menu li a { position: relative; z-index: 8; display: block; width: 100%; height: 36px; text-indent: 40px; line-height: 36px; font-size: 14px; color: rgb(68, 68, 68); background-position: 0px bottom; }
+.m-menu li a:hover { color: rgb(68, 138, 202); }
+.m-menu li:last-child a { background-position: 9999px 9999px; }
+.m-menu li.crt a { z-index: 9; margin: -3px -36px -3px 0px; padding: 3px 36px 3px 0px; color: rgb(68, 138, 202); background-position: 0px -194px; }
+.m-article { font-size: 12px; line-height: 1.8; }
+.m-article dt, .m-article dd, .m-article h3, .m-article h4, .m-article p, .m-article ul, .m-article ol, .m-article li, .m-article table { margin: 0px 0px 0.6em; }
+.m-article dt { margin-top: 2em; font-size: 1.167em; font-weight: bold; color: rgb(68, 68, 68); }
+.m-article dd { margin-bottom: 1.6em; }
+.m-article ul, .m-article ol { padding-left: 2em; }
+.m-article ul li { list-style: outside none disc; }
+.m-article th, .m-article td { padding: 0.3em 1em; border: 1px solid rgb(225, 225, 232); vertical-align: top; empty-cells: show; }
+.m-article pre{display: grid;padding-bottom: 15px}
+/*.m-article pre::after { position: absolute; top: 0px; left: 0px; bottom: 0px; width: 30px; border-right: 1px solid rgb(236, 236, 240); border-radius: 5px 0px 0px 5px; content: ""; background: rgb(251, 251, 252) none repeat scroll 0% 0%; }*/
+.m-share { position: fixed; z-index: 20; right: 0px; top: 230px; width: 30px; padding: 6px; border: 1px solid rgb(222, 222, 222); background: rgb(255, 255, 255) none repeat scroll 0% 0%; }
+.m-share li, .m-share li a { float: left; width: 30px; height: 30px; }
+.m-share li a { overflow: hidden; text-indent: -2000px; }
+.m-share li a.s1 { background-position: 0px 0px; }
+.m-share li a.s2 { background-position: 0px -30px; }
+.m-share li a.s3 { background-position: 0px -60px; }
+.m-share li a.s4 { background-position: 0px -90px; }
+.m-share li a.s5 { background-position: 0px -120px; }
+.m-share li a:hover { background-position-x: -30px; }
+.m-antime .antime::after { content: ""; position: absolute; z-index: 15; top: 0px; right: 0px; width: 5px; height: 12px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; }
+.m-antime .antime .parent::before { content: "-"; }
+.m-antime .antime li.z-fold .parent::before { content: "+"; }
+.m-antime .antime .child::before { content: "."; }
+.u-ttb, .u-ttb2 { line-height: normal; color: rgb(68, 68, 68); }
+.u-ttb2 { margin: 0px 0px 35px; font-size: 24px; }
+.u-line, .u-line .linea, .u-line .lineb { height: 3px; overflow: hidden; }
+.u-line { background-position: 0px -8px; background-repeat: repeat-x; }
+.u-line .linea, .u-line .lineb { width: 373px; }
+.u-line .linea { float: left; margin-right: -373px; background-position: 0px 0px; }
+.u-line .lineb { float: right; margin-left: -373px; background-position: 0px -4px; }
+.f-cb::after { clear: both; display: block; visibility: hidden; height: 0px; overflow: hidden; content: "."; }
+.f-cb {  }
+.f-usn { -moz-user-select: none; }
+@media screen and (max-width: 899px) {
+	.m-share:not(.m-share-2) { display: none; }
+}
+.syntaxhighlighter a, .syntaxhighlighter div, .syntaxhighlighter code, .syntaxhighlighter table, .syntaxhighlighter table td, .syntaxhighlighter table tr, .syntaxhighlighter table tbody, .syntaxhighlighter table thead, .syntaxhighlighter table caption, .syntaxhighlighter textarea { background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%; border: 0px none; bottom: auto; float: none; height: auto; left: auto; line-height: 17px; margin: 0px; outline: 0px none; overflow: visible; padding: 0px; position: static; right: auto; text-align: left; top: auto; vertical-align: baseline; width: auto; box-sizing: content-box; font-family: "Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace; font-weight: normal; font-style: normal; font-size: 12px; min-height: 0px; overflow-wrap: break-word; }
+.syntaxhighlighter { margin: 10px 0px; position: relative; overflow-x: auto; overflow-y: hidden; font-size: 12px; border: 1px solid rgb(225, 225, 232); border-radius: 5px; background: rgb(247, 247, 249) none repeat scroll 0% 0%; }
+.syntaxhighlighter .line { white-space: nowrap; overflow-wrap: normal; }
+.syntaxhighlighter table { table-layout: fixed; width: 100%; }
+.syntaxhighlighter table td.code .container { position: relative; padding: 5px 0px; }
+.syntaxhighlighter table td.gutter { width: 30px; padding: 5px 0px; border-radius: 5px 0px 0px 5px; background: rgb(251, 251, 252) none repeat scroll 0% 0%; }
+.syntaxhighlighter table td.gutter .line { text-align: right; padding: 0px 6px 0px 0px; }
+.syntaxhighlighter table td.code .line { padding: 0px 12px; }
+.syntaxhighlighter .toolbar { display: none; position: absolute; right: 1px; top: 1px; width: 11px; height: 11px; font-size: 10px; z-index: 10; }
+.syntaxhighlighter .toolbar a { display: block; text-align: center; text-decoration: none; padding-top: 1px; }
+.syntaxhighlighter .gutter { border-right: 1px solid rgb(236, 236, 240); color: rgb(175, 175, 175); }
+.syntaxhighlighter .gutter .line { background: rgb(251, 251, 252) none repeat scroll 0% 0%; }
+.syntaxhighlighter .toolbar { color: white; background: rgb(108, 226, 108) none repeat scroll 0% 0%; border: medium none; }
+.syntaxhighlighter .toolbar a { color: white; }
+.syntaxhighlighter .toolbar a:hover { color: black; }
+.syntaxhighlighter .plain, .syntaxhighlighter .plain a { color: black; }
+.syntaxhighlighter .comments, .syntaxhighlighter .comments a { color: rgb(0, 130, 0); }
+.syntaxhighlighter .string, .syntaxhighlighter .string a { color: blue; }
+.syntaxhighlighter .keyword { color: rgb(0, 102, 153); }
+.syntaxhighlighter .color1, .syntaxhighlighter .color1 a { color: gray; }
+.syntaxhighlighter .keyword { font-weight: bold; }

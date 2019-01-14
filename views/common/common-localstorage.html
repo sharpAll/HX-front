@@ -1,0 +1,42 @@
+<h2 class="u-ttb2">通用业务模块 - localStorage</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>localStorage功能</dt>
+    <dd>
+        <p>提供localStorage相关的增删改查方法。</p>
+        <p>字段值采用base64加密方式。</p>
+        <p>默认的有效时间段为30分钟。</p>
+    </dd>
+    <dt>简单样例</dt>
+    <div>
+        <form id="localForm">
+            <div>
+                <label style="display: inline-block">姓名：</label>
+                <input style="display: inline-block" name="name" type="text"/>
+            </div>
+        </form>
+        <button id="setValue">存储字段</button>
+        <button id="getValue">获取字段</button>
+    </div>
+	<dt>调用方式</dt>
+	<dd>
+         <pre>
+             <code class="javascript">
+                /*
+                **存入localstorage的键值
+                */
+               var isSet=HXcommon.localStorage.setValue(key,value);
+                 /*
+                * 根据键名取出对应的值，第二个参数为可选项，设置逾期时间(秒)，默认为30分钟
+                */
+              var value=HXcommon.localStorage.getValue('name',3600);
+                   /*
+                * 清除某一个条目
+                */
+              var isClear=HXcommon.localStorage.clearValue('name');
+             </code>
+        </pre>
+	</dd>
+    <script src="views/common/common-localstorage.js"></script>
+</dl>
+</div>

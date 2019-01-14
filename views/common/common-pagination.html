@@ -1,0 +1,35 @@
+<h2 class="u-ttb2">通用业务模块 - 分页</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>分页</dt>
+    <dd>
+        <p>基于layui的分页插件，分为前端分页与后台分页。</p>
+        <p>只封装了分页本身的逻辑，返回为json数据，是为了尽量提高插件的可定制性。</p>
+        <p>需要添加id名为pagination的页码容器，类名为list-content的分页容器。</p>
+        <p>前端分页参数为分页数据，数据渲染函数，可选的自定义配置（显示条目数limit）。返回数据需要包含数据总数total与条目数组row。</p>
+        <p>由于项目迭代原因，后台分页分为基于老版数据请求（带.ajax后缀）的方法paginationAsync与基于新版spring的方法paginationAsyncSpring。</p>
+        <p>后台分页参数为接口地址，接口参数（例{page:1,size:8}），数据渲染函数，可选的自定义配置（显示条目数limit）。返回数据需要包含数据总数total。</p>
+    </dd>
+
+    <dt>前端分页简单样例</dt>
+    <div class="list-content">
+        <table>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <div id="pagination"></div>
+	<dt>前端分页调用方式</dt>
+	<dd>
+        <pre>
+             <code class="javascript">
+                HXcommon.pagination(data,function (curContent) {
+                   //数据渲染部分
+                },{'limit':3});
+             </code>
+        </pre>
+	</dd>
+    <script src="views/common/common-pagination.js"></script>
+</dl>
+</div>

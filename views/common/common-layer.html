@@ -1,0 +1,231 @@
+<h2 class="u-ttb2">通用业务模块 - 弹窗</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>弹窗</dt>
+    <dd>
+        <p>基于layui弹窗模块的再封装。直接调用需要引入独立版的layer.js。</p>
+        <p>目前已封装的功能包括tips，msg，confirm，alert，success，fail，open，show。关闭弹窗closeLayer。</p>
+    </dd>
+    <dt>简单样例</dt>
+        <pre>
+             <code class="javascript">
+                //tips框，obj:吸附的jquery元素,msg:消息内容，operation:1上，2右(默认)，3下，4左，backgroundColor:弹窗背景色，time:显示时间默认5000毫秒,0为不关闭
+                tips: function (obj, msg, operation,backgroundColor, time) {
+                    var tipsArray=[];
+                    if(operation == "undefined" || operation == "" || operation == undefined || operation==null){
+                        tipsArray.push(2);
+                    }else{
+                        tipsArray.push(operation);
+                    }
+                    if(backgroundColor == "undefined" || backgroundColor == "" || backgroundColor == undefined || backgroundColor==null){
+                        tipsArray.push('#000');
+                    }else{
+                        tipsArray.push(backgroundColor);
+                    }
+                    return layer.tips(msg, obj, {
+                        tips: tipsArray,
+                        time: time == null ? 5000 : Number(time)
+                    });
+                }
+             </code>
+        </pre>
+        <div>
+            <button id="layer-tips">tips</button>
+        </div>
+        <pre>
+             <code class="javascript">
+                //msg:消息内容，time:显示时间默认2000毫秒
+                msg: function (msg, time) {
+                    if (time == null || isNaN(time) && Number(time) < 0) {
+                        time = 2000;
+                    } else {
+                        time = Number(time);
+                    }
+                    return layer.msg(msg, { time: time });
+                }
+             </code>
+        </pre>
+    <div>
+        <button id="layer-msg">msg</button>
+    </div>
+    <pre>
+             <code class="javascript">
+                //msg:消息内容，callback:点击确定执行函数，cancelcallback:点击取消执行函数
+                confirm: function (msg, callback, cancelcallback) {
+                    return layer.confirm(msg,
+                        {
+                            icon: 3,
+                            shadeClose: true,
+                            skin: 'layui-layer-rim',
+                            shade: [0.5, '#000', true],
+                            border: [6, 0.3, '#000000', true],
+                            btn: ['确定','取消'],
+                            scrollbar: false
+                        }, function (index) {
+                            if (callback != null && typeof (callback) === "function") {
+                                callback();
+                            }
+                            layer.close(index);
+                        }, function (index) {
+                            if (cancelcallback != null && typeof (cancelcallback) === "function") {
+                                cancelcallback();
+                            }
+
+                        });
+                }
+             </code>
+        </pre>
+    <div>
+        <button id="layer-confirm">confirm</button>
+    </div>
+    <pre>
+             <code class="javascript">
+                //msg:消息内容，callback:点击确定执行函数
+                alert: function (msg, callback) {
+                    return layer.alert(msg,
+                        {
+                            icon: 0,
+                            skin: 'layui-layer-rim',
+                            shade: [0.5, '#000', true],
+                            border: [6, 0.3, '#000000', true],
+                            scrollbar: false
+                        }, function (index) {
+                            if (callback != null && typeof (callback) === "function") {
+                                callback();
+                            }
+                            layer.close(index);
+                        });
+                }
+             </code>
+        </pre>
+    <div>
+        <button id="layer-alert">alert</button>
+    </div>
+    <pre>
+             <code class="javascript">
+                 //msg:消息内容，callback:点击确定执行函数，btnText:设置按钮文本 默认为‘确定’
+                success: function (msg, callback,btnText) {
+                    var btnText = btnText;
+                    if(btnText == "undefined" || btnText == "" || btnText == undefined){
+                        btnText = "确定";
+                    }
+                    return layer.alert(msg,
+                        {
+                            icon: 1,
+                            skin: 'layui-layer-rim',
+                            shade: [0.5, '#000', true],
+                            border: [6, 0.3, '#000000', true],
+                            scrollbar: false,
+                            btn: [btnText]
+                        }, function (index) {
+                            if (callback != null && typeof (callback) === "function") {
+                                callback();
+                            }
+                            layer.close(index);
+                        });
+                }
+             </code>
+        </pre>
+    <div>
+        <button id="layer-success">success</button>
+    </div>
+    <pre>
+             <code class="javascript">
+                //msg:消息内容，callback:点击确定执行函数
+                fail: function (msg, callback) {
+                    return layer.alert(msg,
+                        {
+                            icon: 2,
+                            skin: 'layui-layer-rim',
+                            shade: [0.5, '#000', true],
+                            border: [6, 0.3, '#000000', true],
+                            scrollbar: false
+                        }, function (index) {
+                            if (callback != null && typeof (callback) === "function") {
+                                callback();
+                            }
+                            layer.close(index);
+                        });
+                }
+             </code>
+        </pre>
+    <div>
+        <button id="layer-fail">fail</button>
+    </div>
+    <pre>
+             <code class="javascript">
+              //url:弹窗内容地址，title:弹窗标题，skin:皮肤名称，width:弹窗宽度，height:弹窗高度，cancelcallback:关闭回调
+                open: function (url, title,skin, width, height, cancelcallback) {
+                    if (width == null || width == "" || isNaN(width) || Number(width) <= 0) {
+                        width = 480;
+                    }
+                    if (height == null || height == "" || isNaN(height) || Number(height) <= 0) {
+                        height = 270;
+                    }
+                    return layer.open({
+                        type: 2,
+                        closeBtn: 1,
+                        title: title == null || title == "" ? false : title,
+                        shade: [0.5, '#000', true],
+                        border: [6, 0.3, '#000000', true],
+                        area: [width + "px", height + "px"],
+                        skin:skin,
+                        //offset: (($(window).height() < height ? height + 40 : $(window).height()) - height) / 2 + 'px',
+                        //maxmin: true,
+                        content: url,
+                        cancel: function (index) {
+                            if (cancelcallback != null && typeof (cancelcallback) === "function") {
+                                cancelcallback();
+                            }
+                        }
+                    });
+                }
+             </code>
+        </pre>
+    <div>
+        <button id="layer-open">open</button>
+    </div>
+    <pre>
+             <code class="javascript">
+              //content:html内容，title:弹窗标题，width:弹窗宽度，height:弹窗高度，cancelcallback:关闭回调
+                show: function (content, title, width, height, cancelcallback) {
+                    if (width == null || width == "" || isNaN(width) || Number(width) <= 0) {
+                        width = 480;
+                    }
+                    if (height == null || height == "" || isNaN(height) || Number(height) <= 0) {
+                        height = 270;
+                    }
+                    //页面层
+                    return layer.open({
+                        type: 1,
+                        closeBtn: 1,
+                        title: title == null || title == "" ? false : title,
+                        skin: '',
+                        area: [width + "px", height + "px"],//宽高
+                        border: [6, 0.3, '#000000', true],
+                        //offset: (($(window).height() < height ? height + 40 : $(window).height()) - height) / 2 + 'px',
+                        content: content,
+                        cancel: function (index) {
+                            if (cancelcallback != null && typeof (cancelcallback) === "function") {
+                                cancelcallback();
+                            }
+                        }
+                    });
+                }
+             </code>
+        </pre>
+    <div>
+        <button id="layer-show">show</button>
+    </div>
+	<dt>调用方式</dt>
+	<dd>
+		<pre>
+             <code class="javascript">
+                 HXcommon.layer.tips('#layer-tips','这是条tips',1);
+             </code>
+        </pre>
+	</dd>
+
+    <script src="views/common/common-layer.js" type="text/javascript"></script>
+</dl>
+</div>

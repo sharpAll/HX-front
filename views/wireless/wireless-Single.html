@@ -1,0 +1,111 @@
+<h2 class="u-ttb2">无线电应用规范 - 单频电平时间图</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>电平时间图</dt>
+    <dd>
+        <p>某频点电平随时间变化的图表</p>
+        <p>以下折线图基于highchart</p>
+    </dd>
+    <dt>参数配置</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+	{
+        chart:{
+            backgroundColor:'#fff',
+            margin:[-3,0,25,51],
+            animation:false
+        },
+        credits:{
+            enabled:false
+        },
+        title: {
+            text: null
+        },
+        xAxis: {
+            title: {
+                text: '时间',
+                align:'high',
+                style:{"fontSize": "15px","color": "#7a8282"}
+            },
+            lineWidth: 1,
+            lineColor:'#8a8a8a',
+            labels:{
+                enabled:false
+            },
+            tickLength:0,
+            crosshair: {
+                width: 2,
+                color: '#ff9666',
+                dashStyle: 'Solid'
+            }
+        },
+        yAxis: {
+            title: {
+                text: '电平(dBμV)',
+                align:'high',
+                style:{"fontSize": "15px","color": "#7a8282"},
+                x:10,
+                y:10
+            },
+            gridLineColor:'#8a8a8a',
+            gridLineDashStyle:'ShortDash',
+            labels:{
+                style:{"fontSize": "15px","color": "#7a8282"},
+                x:-5
+            },
+            tickPositions:[-20,0,20,40,60,80,100],
+            lineWidth: 1,
+            lineColor:'#8a8a8a'
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            line: {
+                color:'#15ba57',
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 2,
+                states: {
+                    hover: {
+                        lineWidth: 2
+                    }
+                },
+                threshold: null
+            }
+        },
+        tooltip: {
+            formatter: function () {
+                // var s = '&lt;b&gt;时间: ' + this.x + 's&lt;/b&gt;&lt;br/&gt;';
+                var s='';
+                $.each(this.points, function () {
+                    s += '' + "电平" + ': ' +
+                        this.y + 'dBμV';
+                });
+                return s;
+            },
+            shared: true
+        },
+        series: [{
+            type: 'line',
+            name: '电平',
+            turboThreshold:4000,
+            data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+        }]
+    }
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt>简单样例</dt>
+    <div id="singleChart" style="height: 200px">
+
+    </div>
+	<script src="tools/Highcharts-5.0.12/highcharts.js"></script>
+    <script src="js/wireless.js"></script>
+    <script src="views/wireless/wireless-Single.js"></script>
+</dl>
+</div>

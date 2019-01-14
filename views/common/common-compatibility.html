@@ -1,0 +1,61 @@
+<h2 class="u-ttb2">通用业务模块 - 兼容性</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>兼容性</dt>
+    <dd>
+        <p>提供检测当前游览器是否为IE8及以下版本游览器的方法legalBrowser。</p>
+        <p>可选择一个bool类型的参数，默认为false，当为true时，会加载兼容ie8的几个方法。</p>
+        <pre>
+             <code class="javascript">
+                //解决IE8不支持consolec产生的错误
+                window.console = window.console || (function () {
+                        var c = {}; c.log = c.warn = c.debug = c.info = c.error = c.time = c.dir = c.profile
+                            = c.clear = c.exception = c.trace = c.assert = function () { };
+                        return c;
+                })();
+             </code>
+        </pre>
+        <pre>
+             <code class="javascript">
+                //为IE8添加indexOf方法
+                if (!Array.prototype.indexOf){
+                    Array.prototype.indexOf = function(elt /*, from*/){
+                        var len = this.length >>> 0;
+                        var from = Number(arguments[1]) || 0;
+                        from = (from < 0)
+                            ? Math.ceil(from)
+                            : Math.floor(from);
+                        if (from < 0)
+                            from += len;
+                        for (; from < len; from++)
+                        {
+                            if (from in this &&
+                                this[from] === elt)
+                                return from;
+                        }
+                        return -1;
+                    };
+                }
+             </code>
+        </pre>
+        <pre>
+             <code class="javascript">
+                //解决 IE8 上trim()出错
+                String.prototype.trim = function()
+                {
+                    return this.replace(/(^\s*)|(\s*$)/g, "");
+                }
+             </code>
+        </pre>
+    </dd>
+    <dt>简单样例</dt>
+    <div>
+        <button id="isIE8">是否为IE8及以下版本</button>
+    </div>
+	<dt>调用方式</dt>
+	<dd>
+		<p>HXcommon.legalBrowser();</p>
+	</dd>
+    <script src="views/common/common-compatibility.js"></script>
+</dl>
+</div>

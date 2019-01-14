@@ -1,0 +1,110 @@
+<h2 class="u-ttb2">无线电应用规范 - 规范折线图</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>规范折线图</dt>
+    <dd>
+        <p>通常用于导出Excel的折线图</p>
+        <p>无线电委员会对于此类折线图具有习惯上的规范</p>
+        <p>以下折线图基于highchart</p>
+    </dd>
+    <dt>参数配置</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+	{
+        title: {
+            text: ''+startfreq+'-'+endfreq+'MHz频谱占用情况'
+        },
+        credits:{
+            enabled:false
+        },
+        subtitle: {
+            text: '',
+            align:'left',
+            style:{
+                "fontSize":"12px",
+                'color':'#333'
+            },
+            x:50,
+            useHTML:true
+        },
+        xAxis: [{
+            categories:[0,0,0],
+            name: '频点',
+            lineWidth:2,
+            lineColor:'#8a8b88'
+        }],
+        yAxis: [{ // Primary yAxis
+            title: {
+                text: '频道占用度%',
+                rotation : 270
+            },
+            tickColor:'#4f6027',
+            tickWidth:2,
+            tickLength:5,
+            tickPosition:'inside',
+            tickPositions:[0,10,20,30,40,50,60,70,80,90,100],
+            gridLineWidth:0,
+            lineWidth:2,
+            lineColor:'#4f6027',
+            opposite: true
+        }, { // Secondary yAxis
+            title: {
+                text: '信号电平dBuV'
+            },
+            tickPositions:[-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90,100],
+            gridLineColor:'#dbdbdb',
+            gridLineWidth:'0.5',
+            gridLineDashStyle:'ShortDash',
+            lineWidth:2,
+            lineColor:'#ff2c2c'
+        }],
+        tooltip: {
+            shared: true
+        },
+        legend: {
+            align: 'center',
+            verticalAlign: 'bottom',
+            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+        },
+        series: [{
+        	name: '最大电平(dBμV)',
+        	yAxis: 0,
+            data: data.MAXDP,
+            color:'#c5536a',
+            lineWidth: 0.5
+        },{
+        	name: '最小电平(dBμV)',
+        	yAxis: 0,
+            data: data.MINDP,
+            color:'#504aa0',
+            lineWidth: 0.5
+        },{
+        	name: '平均电平(dBμV)',
+        	yAxis: 0,
+            data: data.AVGDP,
+            color:'#75d574',
+            lineWidth: 0.5
+        },{
+        	name: '占用度(%)',
+        	yAxis: 1,
+            data: data.PERCENT,
+            color:'#60615b',
+            lineWidth: 0.5
+        }]
+    }
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt>简单样例</dt>
+    <div id="standardLineChart" style="height: 400px">
+
+    </div>
+	<p>一般业务情况下点数在一千点左右,点太少可能需要调整样式。</p>
+	<script src="tools/Highcharts-5.0.12/highcharts.js"></script>
+    <script src="js/wireless.js"></script>
+    <script src="views/wireless/wireless-Line.js"></script>
+</dl>
+</div>

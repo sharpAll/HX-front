@@ -1,0 +1,31 @@
+<h2 class="u-ttb2">通用业务模块 - 正在加载遮罩层</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>正在加载遮罩层</dt>
+    <dd>
+        <p>参数包括遮罩层配置参数与被遮罩元素。</p>
+        <p>遮罩层配置参数默认为'default'，可配置的样式包括backgroudColor（背景色）、backgroundImage（背景图）、text（文字）、width（宽度）、height（高度）</p>
+        <p>被遮罩元素为可选项、默认为全局遮罩。</p>
+    </dd>
+    <dt>简单样例</dt>
+    <div>
+        <div id="DIV" style="width: 200px;height: 200px;background-color: ghostwhite">
+
+        </div>
+        <button id="loadingBtn" data-type="0">开启遮罩</button>
+    </div>
+	<dt>调用方式</dt>
+	<dd>
+        <pre>
+             <code class="javascript">
+                 //开启遮罩
+                 HXcommon.loader('default','#DIV');
+                 //关闭遮罩
+                 HXcommon.loaderClose('#DIV');
+             </code>
+        </pre>
+	</dd>
+    <script src="/acwsui/js/common/layui-v2.1.5/layui/layui.all.js"></script>
+    <script src="views/common/common-loading.js"></script>
+</dl>
+</div>

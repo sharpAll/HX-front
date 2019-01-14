@@ -1,0 +1,61 @@
+<h2 class="u-ttb2">通用业务模块 - 表单验证</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>表单验证功能</dt>
+    <dd>
+        <p>方法参数为表单模块id，input元素可添加的内容为data-vali是否校验、data-name名称、data-maxLen最大长度、data-minLen最小长度、data-type校验类型。</p>
+        <p>返回参数为表单验证是否通过的bool值。</p>
+        <p>目前可接受的校验类型包括</p>
+        <p>非负数：numberNotNega</p>
+        <p>中文名称：chineseName</p>
+        <p>身份证号：IdNumber</p>
+        <p>成年身份证号：isAdult</p>
+        <p>邮箱地址：Email</p>
+        <p>手机号码：mobile</p>
+        <p>手机号码或邮箱：EmailOrMobile</p>
+    </dd>
+    <dt>简单样例</dt>
+    <div>
+        <form id="validatorForm">
+            <div>
+                <label style="display: inline-block">非负数：</label>
+                <input style="display: inline-block" data-vali="true" data-name="非负数" data-type="numberNotNega"/>
+            </div>
+            <div>
+                <label style="display: inline-block">中文名称：</label>
+                <input style="display: inline-block" data-vali="true" data-name="中文名称" data-type="chineseName"/>
+            </div>
+            <div>
+                <label style="display: inline-block">身份证号：</label>
+                <input style="display: inline-block" data-vali="true" data-name="身份证号" data-type="IdNumber"/>
+            </div>
+            <div>
+                <label style="display: inline-block">成年身份证号：</label>
+                <input style="display: inline-block" data-vali="true" data-name="身份证号" data-type="isAdult"/>
+            </div>
+            <div>
+                <label style="display: inline-block">支付宝账号：</label>
+                <input style="display: inline-block" data-vali="true" data-name="支付宝账号" data-type="ZFB"/>
+            </div>
+            <div>
+                <label style="display: inline-block">邮箱地址：</label>
+                <input style="display: inline-block" data-vali="true" data-name="邮箱地址" data-type="Email"/>
+            </div>
+            <div>
+                <label style="display: inline-block">手机号码：</label>
+                <input style="display: inline-block" data-vali="true" data-name="手机号码" data-type="mobile"/>
+            </div>
+            <div>
+                <label style="display: inline-block">手机号码或邮箱：</label>
+                <input style="display: inline-block" data-vali="true" data-name="手机号码或邮箱" data-type="EmailOrMobile"/>
+            </div>
+        </form>
+        <button id="submit">提交</button>
+    </div>
+	<dt>调用方式</dt>
+	<dd>
+		<p>var passStatus=HXcommon.validator('#validatorForm');</p>
+	</dd>
+    <script src="views/common/common-validator.js"></script>
+</dl>
+</div>

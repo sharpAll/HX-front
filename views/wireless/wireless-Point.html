@@ -1,0 +1,95 @@
+<h2 class="u-ttb2">无线电应用规范 - 大数据量点图</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>大数据量点图</dt>
+    <dd>
+        <p>无线电应用单频测量点阵图</p>
+        <p>由于highchart本身特性，点数不能无限叠加。</p>
+        <p>目前比较可行的方式是当点数增加到一定数量时，去掉最初的部分点，如果数据准确的话，看上去就是一直在变化的。</p>
+        <p>需额外引入boost.js & boost-canvas.js（已关闭所有特效）</p>
+    </dd>
+    <dt>参数配置</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+	 {
+            chart: {
+                zoomType: 'xy',
+                height: '100%'
+            },
+            credits:{
+                enabled:false
+            },
+            boost: {
+                useGPUTranslations: true,
+                usePreAllocated: true
+            },
+            xAxis: {
+                min: 0,
+                max: 100,
+                gridLineWidth: 1,
+                labels:{
+                    enabled:false
+                }
+            },
+            yAxis: {
+                // Renders faster when we don't have to compute min and max
+                min: 0,
+                max: 100,
+                minPadding: 0,
+                maxPadding: 0,
+                title: {
+                    text: null
+                },
+                labels:{
+                    enabled:false
+                }
+            },
+            title: {
+                text: null
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions:{
+                scatter:{
+                    allowPointSelect:false,
+                    animation:false
+                }
+            },
+            series: [{
+                type: 'scatter',
+                color: '#15ba57',
+                animation:false,
+                enableMouseTracking:false,
+                data: [],
+                marker: {
+                    radius: 1,
+                    states:{
+                        hover:{
+                            enabled:false
+                        },
+                        select:{
+                            enabled:false
+                        }
+                    },
+                    symbol:'circle'
+                }
+            }]
+     }
+                            </code>
+                            </pre>
+    </dd>
+	
+
+    <dt>简单样例</dt>
+    <div id="bigPointChart" style="width: 400px;">
+
+    </div>
+	<script src="tools/Highcharts-5.0.12/highcharts.js"></script>
+	<script src="tools/Highcharts-5.0.12/boost.js"></script>
+	<script src="tools/Highcharts-5.0.12/boost-canvas.js"></script>
+    <script src="js/wireless.js"></script>
+    <script src="views/wireless/wireless-Point.js"></script>
+</dl>
+</div>

@@ -1,0 +1,74 @@
+<h2 class="u-ttb2">无线电应用规范 - 瀑布图</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>带标尺的瀑布图</dt>
+    <dd>
+        <p>带标尺的瀑布图需要分别初始化标尺initScale与瀑布图initFallChart</p>
+        <p>瀑布图与socket配合使用，前几帧用于校准（主要防止后台传来空数组或错误数组，初始化标尺数据等）</p>
+        <p>需要全局设置 瀑布图对象var fallChart = null; 初始化状态var fallInited = false; 校准次数变量var fallNum = 0;</p>
+    </dd>
+    <dt>初始化函数</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+ //初始化函数
+function fallsModelInit() {
+    $('#fallbox').css('height', $(window).height() - 330);
+	fallChart = customFallBox(37, 807);
+	$(window).resize(function() {
+		fallChart = customFallBox(37, 807);
+	});
+}
+ //设置偏移量 以下方法用于与highchart图标对齐显示
+function customFallBox(startFreq, endFreq) {
+	var fallChartTemp;
+	if ($(window).width() <= 1120) {
+		HXwireless.falls.initScale(startFreq, endFreq, 10, 60);
+		fallChartTemp = HXwireless.falls.initFallChart(10, 60);
+	} else {
+		var offset = (($(window).width() - 1120) / 64).toFixed(1);
+		var left = 10 + offset * 1;
+		var right = 60 + offset * 1;
+		HXwireless.falls.initScale(startFreq, endFreq, left, right);
+		fallChartTemp = HXwireless.falls.initFallChart(left, right);
+	}
+	return fallChartTemp;
+}
+                            </code>
+                            </pre>
+    </dd>
+
+    <dt>socket内执行方法</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+			if (!fallInited) {
+				fallChart = customFallBox(startFreq, endFreq);
+				$(window).resize(function() {
+					fallChart = customFallBox(startFreq, endFreq);
+				});
+				fallInited = true;
+			}
+			var fallList = info.list1;
+			if (undefined != fallList && null != fallList) {
+				if (fallNum < 4) {
+					fallNum++;
+				}
+				if (fallNum > 3) {
+					fallChart(fallList);
+				}
+
+			}
+                            </code>
+                            </pre>
+    </dd>
+
+    <dt>简单样例</dt>
+    <div id="fallbox" style="height: 300px">
+        <canvas id="scale" style="display: block"></canvas>
+        <canvas id="fallChart" style="display: block"></canvas>
+    </div>
+    <script src="js/wireless.js"></script>
+    <script src="views/wireless/wireless-falls.js"></script>
+</dl>
+</div>

@@ -1,0 +1,79 @@
+<h2 class="u-ttb2">通用业务模块 - 浏览器工具</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>游览器工具</dt>
+    <dd>
+        <p>封装了判断游览器操作系统方法、当前浏览器厂商方法。</p>
+        <pre>
+             <code class="javascript">
+                /*
+                判断手机操作系统类型 非移动端返回false
+                 */
+                operationType:function () {
+                    var operate="";
+                    if(!(/Android|webOS|iPhone|iPad|BlackBerry/i.test(navigator.userAgent))){
+                        return false;
+                    }else {
+                        if(navigator.userAgent.match(/Android/i)){
+                            operate="android";
+                        }else if(navigator.userAgent.match(/BlackBerry/i)){
+                            operate="blackberry";
+                        }else if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
+                            operate="ios";
+                        }else if(navigator.userAgent.match(/IEMobile/i)){
+                            operate="windows";
+                        }else{
+                            operate="others";
+                        }
+                        return operate;
+                    }
+                }
+             </code>
+        </pre>
+        <pre>
+             <code class="javascript">
+                //判断游览器厂商类型
+                bowserType:function () {
+                    var userAgent = navigator.userAgent.toLowerCase();
+                    var brower;
+                    if (userAgent.indexOf("micromessenger") >= 0) {
+                        browser = "micromessenger"; //微信
+                    } else if (userAgent.indexOf("mqqbrowser") >= 0) {
+                        browser = "mqqbrowser";//qq
+                    } else if (userAgent.indexOf("sogoumobilebrowser") >= 0) {
+                        browser = "sogoumobilebrowser"; //搜狗
+                    } else if (userAgent.indexOf("baidubrowser") >= 0) {
+                        browser = "baidubrowser"; //百度
+                    } else if (userAgent.indexOf("ucbrowser") >= 0) {
+                        browser = "ucbrowser"; //uc
+                    } else if (userAgent.indexOf("360 aphone browser") >= 0) {
+                        browser = "360 aphone browser"; //360
+                    } else if (userAgent.indexOf("miuibrowser") >= 0) {
+                        browser = "miuibrowser"; //小米
+                    } else if (userAgent.indexOf("firefox") >= 0) {
+                        browser = "firefox"; //火狐
+                    } else if (userAgent.indexOf("chrome") >= 0) {
+                        browser = "chrome"; //谷歌
+                    } else if (userAgent.indexOf("safari") >= 0) {
+                        browser = "safari"; //iphone
+                    }else {
+                        browser = "others";
+                    }
+                    return brower;
+                }
+             </code>
+        </pre>
+    </dd>
+    <dt>简单样例</dt>
+    <div>
+        <button id="operationType">手机浏览器操作系统</button>
+        <button id="bowserType">浏览器厂商</button>
+    </div>
+    <dt>调用方式</dt>
+    <dd>
+        <p>HXcommon.operationType();</p>
+        <p>HXcommon.bowserType();</p>
+    </dd>
+    <script src="views/common/common-browser.js"></script>
+</dl>
+</div>

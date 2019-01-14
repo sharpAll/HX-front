@@ -1,0 +1,78 @@
+<h2 class="u-ttb2">通用业务模块 - 水球图</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>水球图</dt>
+    <dd>
+        <p>具有渐变色与波纹效果的水球图表</p>
+        <p>基于echarts与echarts-liquidfill</p>
+    </dd>
+    <dt>参数配置</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+    /*基于echart的水球图 需引入echarts-liquidfill
+    *el->绑定元素 per->百分比 colorArray->渐变色 callback->点击事件（可选）
+     */
+    liquidfill:function (el,per,colorArray,callback) {
+        var liquid = echarts.init(document.getElementById(el));
+        var option = {
+            series: [{
+                type: 'liquidFill',
+                data: [per],
+                amplitude:3,
+                outline: {
+                    show: false
+                },
+                backgroundStyle: {
+                    color: '#efefef'
+                },
+                itemStyle: {
+                    normal: {
+                        shadowColor: 'rgba(0, 0, 0, 0)',
+                        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                            offset: 0, color: colorArray[0]  },
+                            {
+                                offset: 1, color: colorArray[1]
+                            }], false)
+                    }
+                },
+                animationDuration: 1000,
+                label: {
+                    normal: {
+                        show: true,
+                        textStyle: {
+                            color: '#294D99',
+                            insideColor: '#ffffff',
+                            fontSize: 15,
+                            fontWeight: 'normal'
+                        },
+                        position: ['50%', '85%']
+                    }
+                }
+            }]
+        };
+        liquid.setOption(option);
+        if (callback != null && typeof (callback) === "function") {
+            liquid.getZr().on('click', function() {
+                callback();
+            });
+        }
+    }
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt>简单样例</dt>
+    <div id="liquidChart" style="height: 200px">
+
+    </div>
+	<dt>调用方式</dt>
+	<dd>
+		<p>HXcommon.liquidfill('liquidChart',0.5,['#2fd8ff','#ff3cb7']);</p>
+	</dd>
+	<script src="tools/echarts3.2/echarts.js"></script>
+	<script src="tools/echarts3.2/echarts-liquidfill.min.js"></script>
+    <script src="views/common/common-liquidfill.js"></script>
+</dl>
+</div>
