@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加标记属性</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">
+    <link rel="stylesheet" href="../../css/map.css">
+    <script src="https://js.arcgis.com/3.27/"></script>
+    <script src="../../tools/jquery.js"></script>
+</head>
+<body>
+    <div class="gis-map" id="map">
+
+    </div>
+</body>
+<script>
+    //地图中心
+    var MAP_CENTER=[120.249, 30.054];
+    var stationPointLayer=null;
+    require([
+        "dojo/dom",
+        "dojo/on",
+        "dojo/_base/array",
+
+        "esri/map",
+        "esri/layers/ArcGISTiledMapServiceLayer",
+        "esri/toolbars/draw",
+        "esri/layers/GraphicsLayer",
+        "esri/graphic",
+
+        "esri/geometry/Polygon",
+        "esri/geometry/Circle",
+        "esri/geometry/Point",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/PictureMarkerSymbol",
+        "esri/symbols/TextSymbol",
+        "esri/symbols/Font",
+        "esri/Color",
+
+        "dojo/domReady!"
+    ], function(
+        dom,on,arrayUtils,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
+        Polygon,Circle,Point, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,PictureMarkerSymbol,TextSymbol,Font,Color
+    ){
+        var map = new Map("map", {
+            center: MAP_CENTER,
+            zoom: 10,
+            logo:false
+        });
+        var mapUrl='https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer';
+        var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
+        map.addLayer(myDynamicMapServiceLayer);
+
+        stationPointLayer = new GraphicsLayer();
+        map.addLayer(stationPointLayer);
+        map.on("load",function(){
+            var stationPointSymbol= new PictureMarkerSymbol("/gisDemo/img/icon-lo.png",22,27);
+            var data=[[120.249, 30.054],[120.249, 30.1],[120.249, 30.0]];
+            for(var i=0;i<data.length;i++){
+                var position=[];
+                position.push(data[i][0]);
+                position.push(data[i][1]);
+                var stationPoint = new Point(position);
+                var stationPointGraphic = new Graphic(stationPoint, stationPointSymbol,{'name':"pic"+i,'id':"pic"+i});
+                stationPointLayer.add(stationPointGraphic);
+            }
+            //点击显示详情
+            stationPointLayer.on('click',function (e) {
+                var name=e.graphic.attributes.name;
+                var id=e.graphic.attributes.id;
+                alert(name,id);
+            });
+
+            //悬浮样式
+            stationPointLayer.on('mouse-over',function (e) {
+                var id=e.graphic.attributes.id;
+                var graphicArray=e.graphic.getLayer().graphics;
+                arrayUtils.forEach(graphicArray, function(graphic) {
+                    if(graphic.attributes['id']==id){
+                        graphic.setSymbol(new PictureMarkerSymbol("/gisDemo/img/icon-lo-h.png",25,31));
+                    }
+                });
+            });
+            stationPointLayer.on('mouse-out',function (e) {
+                var id=e.graphic.attributes.id;
+                var graphicArray=e.graphic.getLayer().graphics;
+                arrayUtils.forEach(graphicArray, function(graphic) {
+                    if(graphic.attributes['id']==id){
+                        graphic.setSymbol(new PictureMarkerSymbol("/gisDemo/img/icon-lo.png",22,27));
+                    }
+                });
+            });
+        })
+
+    });
+</script>
+</html>

@@ -115,3 +115,10 @@ body { min-width: 900px; }
 .syntaxhighlighter .keyword { color: rgb(0, 102, 153); }
 .syntaxhighlighter .color1, .syntaxhighlighter .color1 a { color: gray; }
 .syntaxhighlighter .keyword { font-weight: bold; }
+
+a.hover{
+	color: rgb(18, 142, 194);
+}
+a.hover:hover{
+	color: rgb(18, 127, 173);
+}

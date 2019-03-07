@@ -1,0 +1,89 @@
+html,body,h1,h2,h3,h4,h5,h6,div,dl,dt,dd,ul,ol,li,p,blockquote,pre,hr,figure,table,caption,th,td,form,fieldset,legend,input,button,textarea,menu{margin:0;padding:0;box-sizing: border-box}
+html,body{height:100%; width:100%;overflow: hidden; font-family: Arial,Helvetica,sans-serif,"microsoft yahei";}
+header,footer,section,article,aside,nav,hgroup,address,figure,figcaption,menu,details{display:block;}
+table{border-collapse:collapse;border-spacing:0;}
+caption,th{text-align:left;font-weight:normal;}
+html,body,fieldset,img,iframe,abbr{border:0;}
+i,cite,em,var,address,dfn{font-style:normal;}
+[hidefocus],summary{outline:0;}
+li{list-style:none;}
+h1,h2,h3,h4,h5,h6,small{font-size:100%;}
+sup,sub{font-size:83%;}
+pre,code,kbd,samp{font-family:inherit;}
+q:before,q:after{content:none;}
+textarea{overflow:auto;resize:none;}
+label,summary{cursor:default;}
+a,button{cursor:pointer;}
+h1,h2,h3,h4,h5,h6,em,strong,b{font-weight:bold;}
+del,ins,u,s,a,a:hover{text-decoration:none;}
+body,textarea,input,button,select,keygen,legend{font:12px/1.14 arial,Microsoft YaHei;color:#333;outline:0;}
+body{background:#fff;}
+a,a:hover{color:#333;}
+
+.gis-map{
+    width: 100%;
+    height: 100%;
+}
+.gis-map .map-left-box{
+    position: absolute;
+    left: 60px;
+    top:10px;
+    z-index: 100;
+}
+.gis-map .map-left-box .item-box{
+    display: inline-block;
+    margin-right: 26px;
+}
+.gis-map .map-left-box .item-box label{
+    font-size: 14px;
+    color: #636363;
+    margin-right: 12px;
+    display: inline-block;
+    line-height: 26px;
+    background-color: #fafafa;
+    box-shadow: 0 1px 1px 0 #dbdbdb;
+    vertical-align: middle;
+    padding: 0 5px ;
+}
+.gis-map .map-left-box .item-box select{
+    width: 120px;
+    height: 26px;
+    font-size: 14px;
+    background-color: #fcfcfc;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-radius: 3px;
+    vertical-align: -1px;
+    padding-left: 8px;
+}
+.gis-map .map-left-box .item-box .tool-box{
+    display: inline-block;
+    height: 26px;
+    background-color: #fafafa;
+    box-shadow: 0 1px 1px 0 #dbdbdb;
+    vertical-align: middle;
+}
+.gis-map .map-left-box .item-box .tool-box .item{
+    float: left;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+    margin: 0 3px;
+}
+.gis-map .map-left-box .item-box .tool-box .item.item-1{
+    background: no-repeat center url(../img/map/icon-1-l.png);
+}
+.gis-map .map-left-box .item-box .tool-box .item.item-1:hover,.gis-map .map-left-box .item-box .tool-box .item.item-1.cur{
+    background: no-repeat center url(../img/map/icon-1-h.png);
+}
+.gis-map .map-left-box .item-box .tool-box .item.item-2{
+    background: no-repeat center url(../img/map/icon-2-l.png);
+}
+.gis-map .map-left-box .item-box .tool-box .item.item-2:hover,.gis-map .map-left-box .item-box .tool-box .item.item-2.cur{
+    background: no-repeat center url(../img/map/icon-2-h.png);
+}
+.gis-map .map-left-box .item-box .tool-box .item.item-3{
+    background: no-repeat center url(../img/map/icon-3-l.png);
+}
+.gis-map .map-left-box .item-box .tool-box .item.item-3:hover,.gis-map .map-left-box .item-box .tool-box .item.item-3.cur{
+    background: no-repeat center url(../img/map/icon-3-h.png);
+}

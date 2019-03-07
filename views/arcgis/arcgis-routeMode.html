@@ -1,0 +1,42 @@
+<h2 class="u-ttb2">arcgis - 路测轨迹模型</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>引用模块介绍</dt>
+    <dd>
+		<p>"esri/graphic"-》图层元素</p>
+		<p>"esri/layers/GraphicsLayer"-》graphic元素的集合，可用于监听graphic事件</p>
+        <p>"esri/geometry/Point"-》点对像</p>
+        <p>"esri/symbols/SimpleMarkerSymbol"-》结合Point对象生成绝对尺寸图形</p>
+        <p>"esri/geometry/Polyline"-》线段对象</p>
+        <p>"esri/symbols/SimpleLineSymbol"-》结合Polyline对象生成线段</p>
+    </dd>
+    <dt>核心代码</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+        function updatePolyLine(lineArr) {
+            carLayer.clear();
+            routeLayer.clear();
+            var last=lineArr[lineArr.length-1];
+            //终点与层级
+            map.centerAndZoom(last,14);
+            var carPoint = new Point(last);
+            var carPointSymbol = new PictureMarkerSymbol("/gisDemo/img/carPoint.png",26,14);
+            var carPointGraphic = new Graphic(carPoint, carPointSymbol);
+            carLayer.add(carPointGraphic);
+
+            var polyline = new Polyline(lineArr);
+            var linesymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+                new Color([0,255,0]),
+                3);
+            var linegraphic = new Graphic(polyline, linesymbol);
+            routeLayer.add(linegraphic);
+        }
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt><a class="hover" href="/HX-front/views/arcgis/demo-routeMode.html" target="_blank">查看样例</a></dt>
+</dl>
+</div>

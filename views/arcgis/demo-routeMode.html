@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>路测轨迹模型</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">
+    <link rel="stylesheet" href="../../css/map.css">
+    <script src="https://js.arcgis.com/3.27/"></script>
+    <script src="../../tools/jquery.js"></script>
+</head>
+<body>
+<div class="gis-map" id="map">
+
+</div>
+<script>
+    //地图中心
+    var MAP_CENTER=[120.249, 30.054];
+    var carLayer=null;
+    var routeLayer=null;
+    var routeArray=[[120.249, 30.054]];
+    require([
+        "dojo/dom",
+        "dojo/on",
+        "dojo/_base/array",
+
+        "esri/map",
+        "esri/layers/ArcGISTiledMapServiceLayer",
+        "esri/toolbars/draw",
+        "esri/layers/GraphicsLayer",
+        "esri/graphic",
+
+        "esri/geometry/Polygon",
+        "esri/geometry/Circle",
+        "esri/geometry/Point",
+        "esri/geometry/Polyline",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/PictureMarkerSymbol",
+        "esri/symbols/TextSymbol",
+        "esri/symbols/Font",
+        "esri/Color",
+
+        "dojo/domReady!"
+    ], function(
+        dom,on,arrayUtils,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
+        Polygon,Circle,Point,Polyline, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,PictureMarkerSymbol,TextSymbol,Font,Color
+    ){
+        var map = new Map("map", {
+            center: MAP_CENTER,
+            zoom: 10,
+            logo:false
+        });
+        var mapUrl='https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer';
+        var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
+        map.addLayer(myDynamicMapServiceLayer);
+
+        routeLayer = new GraphicsLayer();
+        map.addLayer(routeLayer);
+        carLayer= new GraphicsLayer();
+        map.addLayer(carLayer);
+        map.on("load",function(){
+            updatePolyLine(routeArray);
+            setInterval(function () {
+                var n=routeArray.length-1;
+                var temp=[];
+                temp.push(routeArray[n][0]+0.001);
+                temp.push(routeArray[n][1]+0.001);
+                routeArray.push(temp);
+                updatePolyLine(routeArray);
+            },1000)
+        });
+        function updatePolyLine(lineArr) {
+            routeLayer.clear();
+            carLayer.clear();
+            var last=lineArr[lineArr.length-1];
+            //终点与层级
+            map.centerAndZoom(last,14);
+
+            var polyline = new Polyline(lineArr);
+            var linesymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+                new Color([0,255,0]),
+                3);
+            var linegraphic = new Graphic(polyline, linesymbol);
+            routeLayer.add(linegraphic);
+
+            var carPoint = new Point(last);
+            var carPointSymbol = new PictureMarkerSymbol("/gisDemo/img/carPoint.png",26,14);
+            var carPointGraphic = new Graphic(carPoint, carPointSymbol);
+            carLayer.add(carPointGraphic);
+        }
+    });
+</script>
+</body>
+</html>

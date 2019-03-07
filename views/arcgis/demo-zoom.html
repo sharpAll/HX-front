@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>监听图层变化</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">
+    <link rel="stylesheet" href="../../css/map.css">
+    <script src="https://js.arcgis.com/3.27/"></script>
+    <script src="../../tools/jquery.js"></script>
+    <script src="../../tools/arcgis/esri.symbol.MultiLineTextSymbol.js"></script>
+</head>
+<body>
+<div class="gis-map" id="map">
+
+</div>
+<script>
+    //地图中心
+    var MAP_CENTER=[120.249, 30.054];
+    var cityLayer=null;
+    var STATION_AREA_DATA={
+        "330000":{
+            "location":[120.15,30.28],
+            "station":[],
+            "name":"浙江省"
+        },
+        "330100":{
+            "location":[120.15,30.28],
+            "station":[],
+            "name":"杭州市"
+        },
+        "330200":{
+            "location":[121.55,29.88],
+            "station":[],
+            "name":"宁波市"
+        },
+        "330300":{
+            "location":[120.70,28.00],
+            "station":[],
+            "name":"温州市"
+        },
+        "330400":{
+            "location":[120.75,30.75],
+            "station":[],
+            "name":"嘉兴市"
+        },
+        "330500":{
+            "location":[120.08,30.90],
+            "station":[],
+            "name":"湖州市"
+        },
+        "330600":{
+            "location":[120.57,30.00],
+            "station":[],
+            "name":"绍兴市"
+        },
+        "330700":{
+            "location":[119.65,29.08],
+            "station":[],
+            "name":"金华市"
+        },
+        "330800":{
+            "location":[118.87,28.93],
+            "station":[],
+            "name":"衢州市"
+        },
+        "330900":{
+            "location":[122.20,30.00],
+            "station":[],
+            "name":"舟山市"
+        },
+        "331000":{
+            "location":[121.43,28.68],
+            "station":[],
+            "name":"台州市"
+        },
+        "331100":{
+            "location":[119.92,28.45],
+            "station":[],
+            "name":"丽水市"
+        }
+    };
+    require([
+        "dojo/dom",
+        "dojo/on",
+        "dojo/_base/array",
+
+        "esri/map",
+        "esri/layers/ArcGISTiledMapServiceLayer",
+        "esri/toolbars/draw",
+        "esri/layers/GraphicsLayer",
+        "esri/graphic",
+
+        "esri/geometry/Polygon",
+        "esri/geometry/Circle",
+        "esri/geometry/Point",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/PictureMarkerSymbol",
+        "esri/symbols/TextSymbol",
+        "esri/symbols/Font",
+        "esri/Color",
+
+        "dojo/domReady!"
+    ], function(
+        dom,on,arrayUtils,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
+        Polygon,Circle,Point, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,PictureMarkerSymbol,TextSymbol,Font,Color
+    ){
+        var map = new Map("map", {
+            center: MAP_CENTER,
+            zoom: 10,
+            logo:false
+        });
+        var mapUrl='https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer';
+        var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
+        map.addLayer(myDynamicMapServiceLayer);
+
+        cityLayer = new GraphicsLayer();
+        map.addLayer(cityLayer);
+        map.on("load",function(){
+            //根据当前层级初始化化
+            cityLayerInit(map.getLevel());
+            //悬浮变红
+            cityLayer.on('mouse-over',function (e) {
+                var name=e.graphic.attributes.name;
+                var graphicArray=e.graphic.getLayer().graphics;
+                arrayUtils.forEach(graphicArray, function(graphic) {
+                    if(graphic.attributes['data-id']==name){
+                        graphic.setSymbol(new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 95, 0, new Color([252, 149, 175,0.8])));
+                    }
+                });
+            });
+            cityLayer.on('mouse-out',function (e) {
+                var name=e.graphic.attributes.name;
+                var graphicArray=e.graphic.getLayer().graphics;
+                arrayUtils.forEach(graphicArray, function(graphic) {
+                    if(graphic.attributes['data-id']==name){
+                        graphic.setSymbol(new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 90, 0, new Color([151, 156, 252,0.8])));
+                    }
+                });
+            });
+            //监听图层
+            map.on('zoom-end',function (e) {
+                cityLayerInit(e.level);
+            });
+        });
+        function cityLayerInit(zoomIndex) {
+            if(zoomIndex>7){
+                cityLayer.clear();
+                for(var temp in STATION_AREA_DATA){
+                    if(temp!='330000'){
+                        var position=new Point(STATION_AREA_DATA[temp].location);
+                        //生成圆形区域(固定长度)
+                        var circleMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 90, 0, new Color([151, 156, 252,0.8]));
+                        var graphic = new Graphic(position,circleMarker,{'name':STATION_AREA_DATA[temp].name,'data-id':STATION_AREA_DATA[temp].name});
+                        cityLayer.add(graphic);
+                        //添加文本内容
+                        var textSymbol=new TextSymbol(STATION_AREA_DATA[temp].name+"\n"+STATION_AREA_DATA[temp].station.length, new Font("16px", Font.STYLE_NORMAL, Font.VARIANT_NORMAL, Font.WEIGHT_NORMAL, "微软雅黑"), new Color([255, 255, 255,1]));
+                        var txtgraphic = new Graphic(position,textSymbol,{'name':STATION_AREA_DATA[temp].name});
+                        cityLayer.add(txtgraphic);
+                    }
+                }
+            }else{
+                cityLayer.clear();
+                var total=0;
+                for(var temp in STATION_AREA_DATA){
+                    total=total+STATION_AREA_DATA[temp].station.length;
+                }
+                var position=new Point(MAP_CENTER);
+                //生成圆形区域(固定长度)
+                var circleMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 90, 0, new Color([151, 156, 252,0.8]));
+                var graphic = new Graphic(position,circleMarker,{'name':'浙江省','data-id':'浙江省'});
+                cityLayer.add(graphic);
+                //添加文本内容
+                var textSymbol=new TextSymbol("浙江省\n"+total, new Font("16px", Font.STYLE_NORMAL, Font.VARIANT_NORMAL, Font.WEIGHT_NORMAL, "微软雅黑"), new Color([255, 255, 255,1]));
+                var txtgraphic = new Graphic(position,textSymbol,{'name':'浙江省'});
+                cityLayer.add(txtgraphic);
+            }
+        }
+    });
+</script>
+</body>
+</html>

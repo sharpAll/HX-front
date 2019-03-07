@@ -1,0 +1,60 @@
+<h2 class="u-ttb2">arcgis - 监听图层变化</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>引用模块介绍</dt>
+    <dd>
+		<p>"esri/graphic"-》图层元素</p>
+		<p>"esri/layers/GraphicsLayer"-》graphic元素的集合，可用于监听graphic事件</p>
+        <p>"esri/geometry/Circle"-》圆形对像</p>
+        <p>"esri/symbols/SimpleFillSymbol"-》结合Circle对象生成地理尺寸图形</p>
+        <p>"esri/symbols/TextSymbol"-》文本元素（添加esri.symbol.MultiLineTextSymbol.js包增加换行功能）</p>
+    </dd>
+    <dt>核心代码</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+            //监听图层
+            map.on('zoom-end',function (e) {
+                cityLayerInit(e.level);
+            });
+            function cityLayerInit(zoomIndex) {
+                if(zoomIndex>7){
+                    cityLayer.clear();
+                    for(var temp in STATION_AREA_DATA){
+                        if(temp!='330000'){
+                            var position=new Point(STATION_AREA_DATA[temp].location);
+                            //生成圆形区域(固定长度)
+                            var circleMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 90, 0, new Color([151, 156, 252,0.8]));
+                            var graphic = new Graphic(position,circleMarker,{'name':STATION_AREA_DATA[temp].name,'data-id':STATION_AREA_DATA[temp].name});
+                            cityLayer.add(graphic);
+                            //添加文本内容
+                            var textSymbol=new TextSymbol(STATION_AREA_DATA[temp].name+"\n"+STATION_AREA_DATA[temp].station.length, new Font("16px", Font.STYLE_NORMAL, Font.VARIANT_NORMAL, Font.WEIGHT_NORMAL, "微软雅黑"), new Color([255, 255, 255,1]));
+                            var txtgraphic = new Graphic(position,textSymbol,{'name':STATION_AREA_DATA[temp].name});
+                            cityLayer.add(txtgraphic);
+                        }
+                    }
+                }else{
+                    cityLayer.clear();
+                    var total=0;
+                    for(var temp in STATION_AREA_DATA){
+                        total=total+STATION_AREA_DATA[temp].station.length;
+                    }
+                    var position=new Point(MAP_CENTER);
+                    //生成圆形区域(固定长度)
+                    var circleMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 90, 0, new Color([151, 156, 252,0.8]));
+                    var graphic = new Graphic(position,circleMarker,{'name':'浙江省','data-id':'浙江省'});
+                    cityLayer.add(graphic);
+                    //添加文本内容
+                    var textSymbol=new TextSymbol("浙江省\n"+total, new Font("16px", Font.STYLE_NORMAL, Font.VARIANT_NORMAL, Font.WEIGHT_NORMAL, "微软雅黑"), new Color([255, 255, 255,1]));
+                    var txtgraphic = new Graphic(position,textSymbol,{'name':'浙江省'});
+                    cityLayer.add(txtgraphic);
+                }
+            }
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt><a class="hover" href="/HX-front/views/arcgis/demo-zoom.html" target="_blank">查看样例</a></dt>
+</dl>
+</div>

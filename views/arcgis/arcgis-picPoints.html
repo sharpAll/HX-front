@@ -1,0 +1,59 @@
+<h2 class="u-ttb2">arcgis - 添加标记属性</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>引用模块介绍</dt>
+    <dd>
+		<p>"esri/graphic"-》图层元素</p>
+		<p>"esri/layers/GraphicsLayer"-》graphic元素的集合，可用于监听graphic事件</p>
+        <p>"esri/geometry/Point"-》点对像</p>
+        <p>"esri/symbols/SimpleMarkerSymbol"-》结合Point对象生成绝对尺寸图形</p>
+        <p>"esri/symbols/TextSymbol"-》文本元素（添加esri.symbol.MultiLineTextSymbol.js包增加换行功能）</p>
+    </dd>
+    <dt>核心代码</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+            var stationPointSymbol= new PictureMarkerSymbol("/HX-front/img/map/icon-lo.png",22,27);
+            var data=[[120.249, 30.054],[120.249, 30.1],[120.249, 30.0]];
+            for(var i=0;i&lt; data.length;i++){
+                var position=[];
+                position.push(data[i][0]);
+                position.push(data[i][1]);
+                var stationPoint = new Point(position);
+                var stationPointGraphic = new Graphic(stationPoint, stationPointSymbol,{'name':"pic"+i,'id':"pic"+i});
+                stationPointLayer.add(stationPointGraphic);
+            }
+            //点击显示详情
+            stationPointLayer.on('click',function (e) {
+                var name=e.graphic.attributes.name;
+                var id=e.graphic.attributes.id;
+                alert(name,id);
+            });
+
+            //悬浮样式
+            stationPointLayer.on('mouse-over',function (e) {
+                var id=e.graphic.attributes.id;
+                var graphicArray=e.graphic.getLayer().graphics;
+                arrayUtils.forEach(graphicArray, function(graphic) {
+                    if(graphic.attributes['id']==id){
+                        graphic.setSymbol(new PictureMarkerSymbol("/gisDemo/img/icon-lo-h.png",25,31));
+                    }
+                });
+            });
+            stationPointLayer.on('mouse-out',function (e) {
+                var id=e.graphic.attributes.id;
+                var graphicArray=e.graphic.getLayer().graphics;
+                arrayUtils.forEach(graphicArray, function(graphic) {
+                    if(graphic.attributes['id']==id){
+                        graphic.setSymbol(new PictureMarkerSymbol("/gisDemo/img/icon-lo.png",22,27));
+                    }
+                });
+            });
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt><a class="hover" href="/HX-front/views/arcgis/demo-picPoints.html" target="_blank">查看样例</a></dt>
+</dl>
+</div>

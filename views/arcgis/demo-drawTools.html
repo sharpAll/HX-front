@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>绘制工具</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">
+    <link rel="stylesheet" href="../../css/map.css">
+    <script src="https://js.arcgis.com/3.27/"></script>
+    <script src="../../tools/jquery.js"></script>
+</head>
+<body>
+    <div class="gis-map" id="map">
+        <div class="map-left-box">
+            <div class="item-box">
+                <label>绘制工具</label>
+                <div class="tool-box">
+                    <div class="item item-1" id="draw-EXTENT"></div>
+                    <div class="item item-2" id="draw-CIRCLE"></div>
+                    <div class="item item-3" id="draw-POLYGON"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    //地图中心
+    var MAP_CENTER=[120.249, 30.054];
+    var graphicDraw=null;
+    require([
+        "dojo/dom",
+        "dojo/on",
+
+        "esri/map",
+        "esri/layers/ArcGISTiledMapServiceLayer",
+        "esri/toolbars/draw",
+        "esri/layers/GraphicsLayer",
+        "esri/graphic",
+
+        "esri/geometry/Polygon",
+        "esri/geometry/Circle",
+        "esri/geometry/Point",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/PictureMarkerSymbol",
+        "esri/symbols/TextSymbol",
+        "esri/symbols/Font",
+        "esri/Color",
+
+        "dojo/domReady!"
+    ], function(
+        dom,on,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
+        Polygon,Circle,Point, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,PictureMarkerSymbol,TextSymbol,Font,Color
+    ){
+        var map = new Map("map", {
+            center: MAP_CENTER,
+            zoom: 8,
+            logo:false
+        });
+        var mapUrl='https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer';
+        var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
+        map.addLayer(myDynamicMapServiceLayer);
+
+        //定义一个绘图工具
+        var toolBar = new Draw(map);
+        //绘制矩形
+        on(dom.byId("draw-EXTENT"),"click",function(){
+            if($(this).hasClass('cur')){
+                //关闭绘图工具
+                toolBar.deactivate();
+                $(this).removeClass('cur');
+            }else{
+                map.graphics.remove(graphicDraw);
+                //激活绘图工具，我要绘制一个面图形
+                toolBar.activate(Draw.EXTENT);
+                $('.tool-box .item').removeClass('cur');
+                $(this).addClass('cur');
+            }
+
+        });
+        //绘制圆形
+        on(dom.byId("draw-CIRCLE"),"click",function(){
+            if($(this).hasClass('cur')){
+                //关闭绘图工具
+                toolBar.deactivate();
+                $(this).removeClass('cur');
+            }else{
+                map.graphics.remove(graphicDraw);
+                toolBar.activate(Draw.CIRCLE);
+                $('.tool-box .item').removeClass('cur');
+                $(this).addClass('cur');
+            }
+
+        });
+        //绘制多边形
+        on(dom.byId("draw-POLYGON"),"click",function(){
+            if($(this).hasClass('cur')){
+                //关闭绘图工具
+                toolBar.deactivate();
+                $(this).removeClass('cur');
+            }else{
+                map.graphics.remove(graphicDraw);
+                toolBar.activate(Draw.POLYGON);
+                $('.tool-box .item').removeClass('cur');
+                $(this).addClass('cur');
+            }
+
+        });
+        on(toolBar, "draw-complete", function (result) {
+            $('.tool-box .item').removeClass('cur');
+            //关闭绘图工具
+            toolBar.deactivate();
+            //获得绘图得到的面
+            var geometry=result.geographicGeometry;
+            var symbol;
+            symbol = new SimpleFillSymbol();
+            graphicDraw = new Graphic(geometry,symbol);
+            //extendObj范围
+            extentObj={
+                "Xmin":geometry.xmin,
+                "Ymin":geometry.ymin,
+                "Xmax":geometry.xmax,
+                "Ymax":geometry.ymax,
+                "geometry":geometry
+            };
+            console.log("Xmin："+extentObj.Xmin+" Ymin:"+extentObj.Ymin+" Xmax:"+extentObj.Xmax+" Ymax:"+extentObj.Ymax);
+            map.graphics.add(graphicDraw);//框选结束后在地图上保留框选范围
+        });
+    });
+</script>
+</html>

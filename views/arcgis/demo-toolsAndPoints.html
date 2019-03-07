@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>点的框选</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">
+    <link rel="stylesheet" href="../../css/map.css">
+    <script src="https://js.arcgis.com/3.27/"></script>
+    <script src="../../tools/jquery.js"></script>
+</head>
+<body>
+    <div class="gis-map" id="map">
+        <div class="map-left-box">
+            <div class="item-box">
+                <label>绘制工具</label>
+                <div class="tool-box">
+                    <div class="item item-1" id="draw-EXTENT"></div>
+                    <div class="item item-2" id="draw-CIRCLE"></div>
+                    <div class="item item-3" id="draw-POLYGON"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    //地图中心
+    var MAP_CENTER=[120.249, 30.054];
+    var stationPointLayer=null;
+    var graphicDraw=null;
+    var extentObj=null;
+    require([
+        "dojo/dom",
+        "dojo/on",
+        "dojo/_base/array",
+
+        "esri/map",
+        "esri/layers/ArcGISTiledMapServiceLayer",
+        "esri/toolbars/draw",
+        "esri/layers/GraphicsLayer",
+        "esri/graphic",
+
+        "esri/geometry/Polygon",
+        "esri/geometry/Circle",
+        "esri/geometry/Point",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/PictureMarkerSymbol",
+        "esri/symbols/TextSymbol",
+        "esri/symbols/Font",
+        "esri/Color",
+
+        "dojo/domReady!"
+    ], function(
+        dom,on,arrayUtils,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
+        Polygon,Circle,Point, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,PictureMarkerSymbol,TextSymbol,Font,Color
+    ){
+        var map = new Map("map", {
+            center: MAP_CENTER,
+            zoom: 10,
+            logo:false
+        });
+        var mapUrl='https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer';
+        var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
+        map.addLayer(myDynamicMapServiceLayer);
+
+        stationPointLayer = new GraphicsLayer();
+        map.addLayer(stationPointLayer);
+        graphicDraw = new GraphicsLayer();
+        map.addLayer(graphicDraw);
+        map.on("load",function(){
+            //定义一个绘图工具
+            var toolBar = new Draw(map);
+            //绘制矩形
+            on(dom.byId("draw-EXTENT"),"click",function(){
+                if($(this).hasClass('cur')){
+                    //关闭绘图工具
+                    toolBar.deactivate();
+                    $(this).removeClass('cur');
+                }else{
+                    map.graphics.remove(graphicDraw);
+                    //激活绘图工具，我要绘制一个面图形
+                    toolBar.activate(Draw.EXTENT);
+                    $('.tool-box .item').removeClass('cur');
+                    $(this).addClass('cur');
+                }
+
+            });
+            //绘制圆形
+            on(dom.byId("draw-CIRCLE"),"click",function(){
+                if($(this).hasClass('cur')){
+                    //关闭绘图工具
+                    toolBar.deactivate();
+                    $(this).removeClass('cur');
+                }else{
+                    map.graphics.remove(graphicDraw);
+                    toolBar.activate(Draw.CIRCLE);
+                    $('.tool-box .item').removeClass('cur');
+                    $(this).addClass('cur');
+                }
+
+            });
+            //绘制多边形
+            on(dom.byId("draw-POLYGON"),"click",function(){
+                if($(this).hasClass('cur')){
+                    //关闭绘图工具
+                    toolBar.deactivate();
+                    $(this).removeClass('cur');
+                }else{
+                    map.graphics.remove(graphicDraw);
+                    toolBar.activate(Draw.POLYGON);
+                    $('.tool-box .item').removeClass('cur');
+                    $(this).addClass('cur');
+                }
+
+            });
+            on(toolBar, "draw-complete", function (result) {
+                $('.tool-box .item').removeClass('cur');
+                //关闭绘图工具
+                toolBar.deactivate();
+                //获得绘图得到的面
+                var geometry=result.geographicGeometry;
+                var symbol;
+                symbol = new SimpleFillSymbol();
+                graphicDraw = new Graphic(geometry,symbol);
+                //extendObj范围
+                extentObj={
+                    "Xmin":geometry.xmin,
+                    "Ymin":geometry.ymin,
+                    "Xmax":geometry.xmax,
+                    "Ymax":geometry.ymax,
+                    "geometry":geometry
+                };
+                console.log("Xmin："+extentObj.Xmin+" Ymin:"+extentObj.Ymin+" Xmax:"+extentObj.Xmax+" Ymax:"+extentObj.Ymax);
+                map.graphics.add(graphicDraw);//框选结束后在地图上保留框选范围
+
+                var str='';
+                var n=0;
+                var graphicArray=stationPointLayer.graphics;
+                arrayUtils.forEach(graphicArray, function(graphic) {
+                    var position=[];
+                    position.push(graphic.geometry.x);
+                    position.push(graphic.geometry.y);
+                    if(extentObj.geometry.contains(new Point(position))){
+                        str+=' '+graphic.attributes['id'];
+                        n+=1;
+                    }
+                });
+                alert('包含'+n+'个点:'+str);
+            });
+
+            //地图点
+            var stationPointSymbol= new PictureMarkerSymbol("/gisDemo/img/icon-lo.png",22,27);
+            var data=[[120.249, 30.054],[120.249, 30.1],[120.249, 30.0]];
+            for(var i=0;i<data.length;i++){
+                var position=[];
+                position.push(data[i][0]);
+                position.push(data[i][1]);
+                var stationPoint = new Point(position);
+                var stationPointGraphic = new Graphic(stationPoint, stationPointSymbol,{'name':"pic"+i,'id':"pic"+i});
+                stationPointLayer.add(stationPointGraphic);
+            }
+        })
+
+    });
+</script>
+</html>

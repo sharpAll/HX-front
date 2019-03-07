@@ -3,6 +3,48 @@ var commonController = {
     _ajaxHander: HXcommon.ajaxDataController(),
     _url: {
         /*
+         arcgis规范-地理纬度与固定纬度
+         get
+         params:{}
+         author:xia
+         */
+        GET_ARCGISCIRCLES:'views/arcgis/arcgis-circles.html',
+        /*
+         arcgis规范-地理纬度与固定纬度
+         get
+         params:{}
+         author:xia
+         */
+        GET_ARCGISPICPOINTS:'views/arcgis/arcgis-picPoints.html',
+        /*
+         arcgis规范-绘制工具
+         get
+         params:{}
+         author:xia
+         */
+        GET_ARCGISDRAWTOOLS:'views/arcgis/arcgis-drawTools.html',
+        /*
+         arcgis规范-点的框选
+         get
+         params:{}
+         author:xia
+         */
+        GET_ARCGISTOOLSANDPOINTS:'views/arcgis/arcgis-toolsAndPoints.html',
+        /*
+         arcgis规范-路测轨迹模型
+         get
+         params:{}
+         author:xia
+         */
+        GET_ARCGISROUTEMODE:'views/arcgis/arcgis-routeMode.html',
+        /*
+         arcgis规范-监听图层
+         get
+         params:{}
+         author:xia
+         */
+        GET_ARCGISZOOM:'views/arcgis/arcgis-zoom.html',
+        /*
          无线电应用规范-频率电平图
          get
          params:{}
@@ -228,4 +270,34 @@ var commonController = {
             callback(data);
         });
     },
+    getArcgisCircles:function (params,callback) {
+        this._ajaxHander.get(this._url.GET_ARCGISCIRCLES,function(data) {
+            callback(data);
+        });
+    },
+    getArcgisPicPoints:function (params,callback) {
+        this._ajaxHander.get(this._url.GET_ARCGISPICPOINTS,function(data) {
+            callback(data);
+        });
+    },
+    getArcgisDrawTools:function (params,callback) {
+        this._ajaxHander.get(this._url.GET_ARCGISDRAWTOOLS,function(data) {
+            callback(data);
+        });
+    },
+    getArcgisToolsAndPoints:function (params,callback) {
+        this._ajaxHander.get(this._url.GET_ARCGISTOOLSANDPOINTS,function(data) {
+            callback(data);
+        });
+    },
+    getArcgisRouteMode:function (params,callback) {
+        this._ajaxHander.get(this._url.GET_ARCGISROUTEMODE,function(data) {
+            callback(data);
+        });
+    },
+    getArcgisZoom:function (params,callback) {
+        this._ajaxHander.get(this._url.GET_ARCGISZOOM,function(data) {
+            callback(data);
+        });
+    }
 };

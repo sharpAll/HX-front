@@ -1,0 +1,58 @@
+<h2 class="u-ttb2">arcgis - 点的框选</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>引用模块介绍</dt>
+    <dd>
+		<p>"esri/graphic"-》图层元素</p>
+		<p>"esri/layers/GraphicsLayer"-》graphic元素的集合，可用于监听graphic事件</p>
+        <p>"esri/toolbars/draw"-》范围选择绘制工具</p>
+        <p>"dojo/dom"-》元素选择</p>
+        <p>"dojo/on"-》事件委托</p>
+        <p>"dojo/_base/array"-》数组工具</p>
+    </dd>
+    <dt>核心代码</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+          on(toolBar, "draw-complete", function (result) {
+                $('.tool-box .item').removeClass('cur');
+                //关闭绘图工具
+                toolBar.deactivate();
+                //获得绘图得到的面
+                var geometry=result.geographicGeometry;
+                var symbol;
+                symbol = new SimpleFillSymbol();
+                graphicDraw = new Graphic(geometry,symbol);
+                //extendObj范围
+                extentObj={
+                    "Xmin":geometry.xmin,
+                    "Ymin":geometry.ymin,
+                    "Xmax":geometry.xmax,
+                    "Ymax":geometry.ymax,
+                    "geometry":geometry
+                };
+                console.log("Xmin："+extentObj.Xmin+" Ymin:"+extentObj.Ymin+" Xmax:"+extentObj.Xmax+" Ymax:"+extentObj.Ymax);
+                map.graphics.add(graphicDraw);//框选结束后在地图上保留框选范围
+
+                var str='';
+                var n=0;
+                var graphicArray=stationPointLayer.graphics;
+                arrayUtils.forEach(graphicArray, function(graphic) {
+                    var position=[];
+                    position.push(graphic.geometry.x);
+                    position.push(graphic.geometry.y);
+                    if(extentObj.geometry.contains(new Point(position))){
+                        str+=' '+graphic.attributes['id'];
+                        n+=1;
+                    }
+                });
+                alert('包含'+n+'个点:'+str);
+            });
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt><a class="hover" href="/HX-front/views/arcgis/demo-toolsAndPoints.html" target="_blank">查看样例</a></dt>
+</dl>
+</div>

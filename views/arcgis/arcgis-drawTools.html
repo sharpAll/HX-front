@@ -1,0 +1,88 @@
+<h2 class="u-ttb2">arcgis - 绘制工具</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>引用模块介绍</dt>
+    <dd>
+		<p>"esri/graphic"-》图层元素</p>
+		<p>"esri/layers/GraphicsLayer"-》graphic元素的集合，可用于监听graphic事件</p>
+        <p>"esri/toolbars/draw"-》范围选择绘制工具</p>
+        <p>"dojo/dom"-》元素选择</p>
+        <p>"dojo/on"-》事件委托</p>
+    </dd>
+    <dt>核心代码</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+        //定义一个绘图工具
+        var toolBar = new Draw(map);
+        //绘制矩形
+        on(dom.byId("draw-EXTENT"),"click",function(){
+            if($(this).hasClass('cur')){
+                //关闭绘图工具
+                toolBar.deactivate();
+                $(this).removeClass('cur');
+            }else{
+                map.graphics.remove(graphicDraw);
+                //激活绘图工具，我要绘制一个面图形
+                toolBar.activate(Draw.EXTENT);
+                $('.tool-box .item').removeClass('cur');
+                $(this).addClass('cur');
+            }
+
+        });
+        //绘制圆形
+        on(dom.byId("draw-CIRCLE"),"click",function(){
+            if($(this).hasClass('cur')){
+                //关闭绘图工具
+                toolBar.deactivate();
+                $(this).removeClass('cur');
+            }else{
+                map.graphics.remove(graphicDraw);
+                toolBar.activate(Draw.CIRCLE);
+                $('.tool-box .item').removeClass('cur');
+                $(this).addClass('cur');
+            }
+
+        });
+        //绘制多边形
+        on(dom.byId("draw-POLYGON"),"click",function(){
+            if($(this).hasClass('cur')){
+                //关闭绘图工具
+                toolBar.deactivate();
+                $(this).removeClass('cur');
+            }else{
+                map.graphics.remove(graphicDraw);
+                toolBar.activate(Draw.POLYGON);
+                $('.tool-box .item').removeClass('cur');
+                $(this).addClass('cur');
+            }
+
+        });
+        on(toolBar, "draw-complete", function (result) {
+            $('.tool-box .item').removeClass('cur');
+            //关闭绘图工具
+            toolBar.deactivate();
+            //获得绘图得到的面
+            var geometry=result.geographicGeometry;
+            var symbol;
+            symbol = new SimpleFillSymbol();
+            graphicDraw = new Graphic(geometry,symbol);
+            //extendObj范围
+            extentObj={
+                "Xmin":geometry.xmin,
+                "Ymin":geometry.ymin,
+                "Xmax":geometry.xmax,
+                "Ymax":geometry.ymax,
+                "geometry":geometry
+            };
+            console.log("Xmin："+extentObj.Xmin+" Ymin:"+extentObj.Ymin+" Xmax:"+extentObj.Xmax+" Ymax:"+extentObj.Ymax);
+             //框选结束后在地图上保留框选范围
+            map.graphics.add(graphicDraw);
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt><a class="hover" href="/HX-front/views/arcgis/demo-drawTools.html" target="_blank">查看样例</a></dt>
+</dl>
+</div>

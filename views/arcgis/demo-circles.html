@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>具有地理意义与固定的圆</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">
+    <link rel="stylesheet" href="../../css/map.css">
+    <script src="https://js.arcgis.com/3.27/"></script>
+    <script src="../../tools/jquery.js"></script>
+    <script src="../../tools/arcgis/esri.symbol.MultiLineTextSymbol.js"></script>
+</head>
+<body>
+<div class="gis-map" id="map">
+
+</div>
+<script>
+    //地图中心
+    var MAP_CENTER=[120.249, 30.054];
+    var circleLayer=null;
+    require([
+        "dojo/dom",
+        "dojo/on",
+        "dojo/_base/array",
+
+        "esri/map",
+        "esri/layers/ArcGISTiledMapServiceLayer",
+        "esri/toolbars/draw",
+        "esri/layers/GraphicsLayer",
+        "esri/graphic",
+
+        "esri/geometry/Polygon",
+        "esri/geometry/Circle",
+        "esri/geometry/Point",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/PictureMarkerSymbol",
+        "esri/symbols/TextSymbol",
+        "esri/symbols/Font",
+        "esri/Color",
+
+        "dojo/domReady!"
+    ], function(
+        dom,on,arrayUtils,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
+        Polygon,Circle,Point, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,PictureMarkerSymbol,TextSymbol,Font,Color
+    ){
+        var map = new Map("map", {
+            center: MAP_CENTER,
+            zoom: 10,
+            logo:false
+        });
+        var mapUrl='https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer';
+        var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
+        map.addLayer(myDynamicMapServiceLayer);
+
+        circleLayer = new GraphicsLayer();
+        map.addLayer(circleLayer);
+        map.on("load",function(){
+            //生成圆形区域(固定长度)
+            var position=new Point([120.249, 30.054]);
+            var circleMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 90, 0, new Color([151, 156, 252,0.8]));
+            var graphic = new Graphic(position,circleMarker,{'name':'固定的长度','data-id':'1'});
+            circleLayer.add(graphic);
+            //添加文本内容
+            var textSymbol=new TextSymbol("固定的\n"+"长度", new Font("16px", Font.STYLE_NORMAL, Font.VARIANT_NORMAL, Font.WEIGHT_NORMAL, "微软雅黑"), new Color([255, 255, 255,1]));
+            var txtgraphic = new Graphic(position,textSymbol,{'name':'固定的长度'});
+            circleLayer.add(txtgraphic);
+
+            //生成圆形区域(地图长度)
+             var circleSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, 0,new Color([240, 194, 110,0.8])
+             );
+             //geodesic设置为测地线的圆 否则为椭圆形
+             var circle = new Circle({
+                 center: [120.549, 30.054],
+                 radius: 5000,
+                 geodesic: true
+             });
+             var graphic = new Graphic(circle, circleSymbol);
+            circleLayer.add(graphic);
+            //添加文本内容
+            var textSymbol=new TextSymbol("地理的\n"+"长度", new Font("16px", Font.STYLE_NORMAL, Font.VARIANT_NORMAL, Font.WEIGHT_NORMAL, "微软雅黑"), new Color([255, 255, 255,1]));
+            var txtgraphic = new Graphic(circle,textSymbol,{'name':'地理的长度'});
+            circleLayer.add(txtgraphic);
+        })
+
+    });
+</script>
+</body>
+</html>
