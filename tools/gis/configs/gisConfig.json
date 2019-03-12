@@ -1,0 +1,6 @@
+{
+  "Map": {
+    "baseMapUrl": "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer",
+    "mapCenter":[120.249, 30.054]
+  }
+}

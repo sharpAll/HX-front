@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>绘制工具</title>
-    <link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">
+    <!--<link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">-->
+    <!--<script src="https://js.arcgis.com/3.27/"></script>-->
+    <script src="../../tools/gis/mapCommon.js"></script>
     <link rel="stylesheet" href="../../css/map.css">
-    <script src="https://js.arcgis.com/3.27/"></script>
     <script src="../../tools/jquery.js"></script>
 </head>
 <body>
@@ -30,6 +31,7 @@
         "dojo/dom",
         "dojo/on",
 
+        "hxdiGisModules/MapLoader",
         "esri/map",
         "esri/layers/ArcGISTiledMapServiceLayer",
         "esri/toolbars/draw",
@@ -49,16 +51,19 @@
 
         "dojo/domReady!"
     ], function(
-        dom,on,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
+        dom,on,MapLoader,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
         Polygon,Circle,Point, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,PictureMarkerSymbol,TextSymbol,Font,Color
     ){
+        var maploader = new MapLoader();
+        var gisConfig = maploader.getGISConfig();
+        var mapUrl = gisConfig["Map"]["baseMapUrl"];
+        var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
+        MAP_CENTER = gisConfig["Map"]["mapCenter"];
         var map = new Map("map", {
             center: MAP_CENTER,
             zoom: 8,
             logo:false
         });
-        var mapUrl='https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer';
-        var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
         map.addLayer(myDynamicMapServiceLayer);
 
         //定义一个绘图工具

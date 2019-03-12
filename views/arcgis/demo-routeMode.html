@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>路测轨迹模型</title>
-    <link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">
+    <!--<link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">-->
+    <!--<script src="https://js.arcgis.com/3.27/"></script>-->
+    <script src="../../tools/gis/mapCommon.js"></script>
     <link rel="stylesheet" href="../../css/map.css">
-    <script src="https://js.arcgis.com/3.27/"></script>
     <script src="../../tools/jquery.js"></script>
 </head>
 <body>
@@ -23,6 +24,7 @@
         "dojo/on",
         "dojo/_base/array",
 
+        "hxdiGisModules/MapLoader",
         "esri/map",
         "esri/layers/ArcGISTiledMapServiceLayer",
         "esri/toolbars/draw",
@@ -43,16 +45,19 @@
 
         "dojo/domReady!"
     ], function(
-        dom,on,arrayUtils,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
+        dom,on,arrayUtils,MapLoader,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
         Polygon,Circle,Point,Polyline, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,PictureMarkerSymbol,TextSymbol,Font,Color
     ){
+        var maploader = new MapLoader();
+        var gisConfig = maploader.getGISConfig();
+        var mapUrl = gisConfig["Map"]["baseMapUrl"];
+        var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
+        MAP_CENTER = gisConfig["Map"]["mapCenter"];
         var map = new Map("map", {
             center: MAP_CENTER,
             zoom: 10,
             logo:false
         });
-        var mapUrl='https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer';
-        var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
         map.addLayer(myDynamicMapServiceLayer);
 
         routeLayer = new GraphicsLayer();
@@ -85,7 +90,7 @@
             routeLayer.add(linegraphic);
 
             var carPoint = new Point(last);
-            var carPointSymbol = new PictureMarkerSymbol("/gisDemo/img/carPoint.png",26,14);
+            var carPointSymbol = new PictureMarkerSymbol("/HX-front/img/map/carPoint.png",26,14);
             var carPointGraphic = new Graphic(carPoint, carPointSymbol);
             carLayer.add(carPointGraphic);
         }
