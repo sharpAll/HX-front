@@ -103,7 +103,7 @@ var HXwireless = {
             $('#fallChart').attr('width',width);
             $('#fallChart').attr('height',height);
 
-            var colors=['#2271c2','#1bccff','#a4aa22','#f1a41c','#e9755a','#aa4219','#9c2a2a'];
+            var colors=['#0001fd','#00649a','#00bf3f','#3bc300','#807e00','#c23c00','#fd0100'];
             var tempH=15;
             var totalLimit=Math.floor(height/tempH);
             var total=[];
@@ -123,6 +123,27 @@ var HXwireless = {
                     return getGradientColor(colors[4],colors[5],item-60);
                 }else if(item>=80&&item<100) {
                     return getGradientColor(colors[5],colors[6],item-80);
+                }
+            }
+            initFallsLengend(width,height,rightOffset);
+            function initFallsLengend(w,h,offset) {
+                offset=offset-2;
+                var left=w-offset;
+                var lengendGradient=ctx.createLinearGradient(left,0,left,h);
+                lengendGradient.addColorStop(0,"#fd0100");
+                lengendGradient.addColorStop(0.16,"#c23c00");
+                lengendGradient.addColorStop(0.32,"#807e00");
+                lengendGradient.addColorStop(0.48,"#3bc300");
+                lengendGradient.addColorStop(0.64,"#00bf3f");
+                lengendGradient.addColorStop(0.80,"#00649a");
+                lengendGradient.addColorStop(1,"#0001fd");
+                ctx.fillStyle=lengendGradient;
+                ctx.fillRect(left,0,offset/2,h);
+                ctx.fillStyle='#202020';
+                ctx.font = "14px 雅黑";
+                ctx.textAlign='center';
+                for(var i=0;i<7;i++){
+                    ctx.fillText(i*20-20, left+offset/4, h-i*h/7-h/18,offset/2);
                 }
             }
             function getGradientColor(startColor,endColor,offset) {
@@ -156,7 +177,7 @@ var HXwireless = {
                     total.shift();
                     total.push(curLine);
                 }
-                ctx.clearRect(0,0,can.width,can.height);
+                ctx.clearRect(0,0,can.width-rightOffset,can.height);
                 for(var n=0;n<total.length;n++){
                     var nLen=total[n].length;
                     var Hoffset=tempH*(total.length-n-1);
@@ -253,6 +274,9 @@ var HXwireless = {
     */
     standardLineChart:function (startfreq,endfreq,data) {
         var lineChart= Highcharts.chart('standardLineChart',{
+            chart:{
+                zoomType:'x'
+            },
             title: {
                 text: ''+startfreq+'-'+endfreq+'MHz频谱占用情况'
             },
