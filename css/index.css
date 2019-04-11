@@ -122,3 +122,12 @@ a.hover{
 a.hover:hover{
 	color: rgb(18, 127, 173);
 }
+
+/*大数据表格*/
+.bigDataTable{width: 800px;}
+.bigDataTable .table-head{padding-right:17px;}
+.bigDataTable .table-body{width:100%; height:300px;overflow-y:scroll;position: relative}
+.bigDataTable .table-body td{height:30px;border: none;box-sizing: border-box;}
+.bigDataTable .table-head table,.table-body table{width:100%;border-collapse: collapse;box-sizing: border-box;}
+.bigDataTable .table-body table{position: absolute}
+.bigDataTable .table-body table tr:nth-child(2n+1){background-color:#f2f2f2;}

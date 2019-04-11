@@ -80,6 +80,13 @@ var commonController = {
          */
         GET_WIRELESSPOINT:'views/wireless/wireless-Point.html',
         /*
+         无线电应用规范-大数据表格
+         get
+         params:{}
+         author:xia
+         */
+        GET_BIGDATATABLE:'views/wireless/wireless-BigDataTable.html',
+        /*
          通用应用规范-水球图
          get
          params:{}
@@ -217,6 +224,11 @@ var commonController = {
     },
     getWirelessPoint: function(params,callback) {
         this._ajaxHander.get(this._url.GET_WIRELESSPOINT,function(data) {
+            callback(data);
+        });
+    },
+    getBigDataTable: function(params,callback) {
+        this._ajaxHander.get(this._url.GET_BIGDATATABLE,function(data) {
             callback(data);
         });
     },

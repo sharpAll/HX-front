@@ -317,6 +317,10 @@ var HXwireless = {
                 title: {
                     text: '信号电平dBuV'
                 },
+                tickColor:'#ff2c2c',
+                tickWidth:2,
+                tickLength:5,
+                tickPosition:'inside',
                 tickPositions:[-40,-30,-20,-10,0,10,20,30,40,50,60,70,80,90,100],
                 gridLineColor:'#dbdbdb',
                 gridLineWidth:'0.5',
@@ -482,10 +486,10 @@ var HXwireless = {
                     marker : {
                         radius : 2
                     },
-                    lineWidth : 2,
+                    lineWidth : 1,
                     states : {
                         hover : {
-                            lineWidth : 2
+                            lineWidth : 1
                         }
                     },
                     threshold : null,
@@ -575,10 +579,10 @@ var HXwireless = {
                     marker: {
                         radius: 2
                     },
-                    lineWidth: 2,
+                    lineWidth: 1,
                     states: {
                         hover: {
-                            lineWidth: 2
+                            lineWidth: 1
                         }
                     },
                     threshold: null
@@ -604,6 +608,39 @@ var HXwireless = {
             }]
         });
         return singleChart;
+    },
+    /* chrome盒模型支持最高像素高度30198915px 最高支持10万级的数据渲染
+    控件尺寸应能整除单项尺寸
+    dom=》拥有滑块的dom容器 opt=》配置参数 callback=》表格加载内容函数*/
+    bigDataScrollBar:function (dom,opt,callback) {
+        var options = {
+            total: 0,   //数据总数
+            pos: null,     //当前滚动位置
+            itemSize: 20,  //单项尺寸
+            size: 200  //控件尺寸
+        };
+        options=$.extend({}, options, opt);
+        var $dom=$('#'+dom);
+        $dom.height(options.size);
+        var height=options.total*options.itemSize;
+        $dom.find('table').eq(0).wrap($('<div style="height: '+height+'px"></div>'));
+        //每页可展示的数据数量
+        var pageItems=options.size/ options.itemSize;
+        //获取滚动位置
+        function getPos() {
+            var top = $dom.scrollTop();
+            $dom.find('table').css('top',top);
+            var pos = parseInt(top / options.itemSize);
+            return pos;
+        }
+        //滚动事件响应
+        $dom.scroll(function () {
+            var pos = getPos();
+            if (pos == options.pos||pos>options.total-pageItems) return;
+            options.pos = pos;
+            callback(pos,pageItems);
+        });
+        $dom.trigger('scroll');
     }
 };
 

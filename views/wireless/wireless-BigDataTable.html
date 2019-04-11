@@ -1,0 +1,66 @@
+<h2 class="u-ttb2">无线电应用规范 - 大数据表格</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>大数据表格</dt>
+    <dd>
+        <p>chrome盒模型支持最高像素高度30198915px，按照滚动条与内容1:1的映射关系，最高应支持十万级的数据渲染。</p>
+        <p>控件尺寸应能整除单项尺寸。</p>
+        <p>参数分别为dom=》拥有滑块的dom容器 opt=》配置参数 callback=》表格加载内容函数。</p>
+    </dd>
+    <dt>布局样式</dt>
+    <dd>
+        <pre>
+           <code class="css">
+                    .table-head{padding-right:17px;background-color:#999;color:#000;}
+                    .table-body{width:100%; height:300px;overflow-y:scroll;position: relative}
+                    .table-body td{height:30px;border: none;box-sizing: border-box;}
+                    .table-head table,.table-body table{width:100%;border-collapse: collapse;box-sizing: border-box;}
+                    .table-body table{position: absolute}
+                    .table-body table tr:nth-child(2n+1){background-color:#f2f2f2;}
+            </code>
+        </pre>
+    </dd>
+    <dt>调用示例</dt>
+    <dd>
+        <pre>
+           <code class="javascript">
+                    bigDataScrollBar('bigDataTable',{total:200000,itemSize:30,size:300},function (pos,pageItems) {
+                        $('#bigDataTable tbody').empty();
+                        var html='';
+                        for(var i=0;i<pageItems;i++){
+                            var index=pos+i*1;
+                            html+='<tr><td>'+array[index].id+'</td><td>'+array[index].text+'</td></tr>';
+                        }
+                        $('#bigDataTable tbody').append(html);
+                    });
+            </code>
+        </pre>
+    </dd>
+
+    <dt>简单样例</dt>
+    <div class="bigDataTable">
+        <div class="table-head">
+            <table>
+                <colgroup>
+                    <col style="width: 80px;" />
+                    <col />
+                </colgroup>
+                <thead>
+                <tr><th>序号</th><th>内容</th></tr>
+                </thead>
+            </table>
+        </div>
+        <div class="table-body" id="bigDataTable">
+            <table>
+                <colgroup><col style="width: 80px;" /><col /></colgroup>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+	<script src="tools/Highcharts-5.0.12/highcharts.js"></script>
+    <script src="js/wireless.js"></script>
+    <script src="views/wireless/wireless-BigDataTable.js"></script>
+</dl>
+</div>
