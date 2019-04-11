@@ -309,7 +309,7 @@ var commonController = {
             callback(data);
         });
     },
-    getArcgisRouteMode:function (params,callback) {
+    getArcgisRouteModel:function (params,callback) {
         this._ajaxHander.get(this._url.GET_ARCGISROUTEMODEL,function(data) {
             callback(data);
         });
