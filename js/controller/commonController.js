@@ -36,7 +36,14 @@ var commonController = {
          params:{}
          author:xia
          */
-        GET_ARCGISROUTEMODE:'views/arcgis/arcgis-routeMode.html',
+        GET_ARCGISROUTEMODEL:'views/arcgis/arcgis-routeModel.html',
+        /*
+         arcgis规范-射向线模型
+         get
+         params:{}
+         author:xia
+         */
+        GET_FIRINGLINEMODEL:'views/arcgis/arcgis-firinglineModel.html',
         /*
          arcgis规范-监听图层
          get
@@ -303,7 +310,12 @@ var commonController = {
         });
     },
     getArcgisRouteMode:function (params,callback) {
-        this._ajaxHander.get(this._url.GET_ARCGISROUTEMODE,function(data) {
+        this._ajaxHander.get(this._url.GET_ARCGISROUTEMODEL,function(data) {
+            callback(data);
+        });
+    },
+    getFiringlineModel:function (params,callback) {
+        this._ajaxHander.get(this._url.GET_FIRINGLINEMODEL,function(data) {
             callback(data);
         });
     },

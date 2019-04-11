@@ -1,0 +1,35 @@
+<h2 class="u-ttb2">arcgis - 射向线模型</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>引用模块介绍</dt>
+    <dd>
+		<p>"esri/graphic"-》图层元素</p>
+		<p>"esri/layers/GraphicsLayer"-》graphic元素的集合，可用于监听graphic事件</p>
+        <p>"esri/geometry/Point"-》点对像</p>
+        <p>"esri/symbols/SimpleMarkerSymbol"-》结合Point对象生成绝对尺寸图形</p>
+        <p>"esri/geometry/Polyline"-》线段对象</p>
+        <p>"esri/symbols/SimpleLineSymbol"-》结合Polyline对象生成线段</p>
+    </dd>
+    <dt>核心代码</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+                var angle=info.bestAngel;
+                var locArray=task.loc.split(',');
+                var locArray_1=[];
+                locArray_1.push(Number(locArray[0])+Math.sin(angle * Math.PI / 180));
+                locArray_1.push(Number(locArray[1])+Math.cos(angle * Math.PI / 180));
+                var polyline = new Polyline([locArray,locArray_1]);
+                var linesymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+                    new Color([0,255,0]),
+                    3);
+                var linegraphic = new Graphic(polyline, linesymbol,{'MFID':task['mfId'],'TASKID':task['taskId']});
+                lineLayer.add(linegraphic);
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt><a class="hover" href="/HX-front/views/arcgis/demo-firinglineModel.html" target="_blank">查看样例</a></dt>
+</dl>
+</div>

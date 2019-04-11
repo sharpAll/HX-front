@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>射向线模型</title>
+    <!--<link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">-->
+    <!--<script src="https://js.arcgis.com/3.27/"></script>-->
+    <script src="../../tools/gis/mapCommon.js"></script>
+    <link rel="stylesheet" href="../../css/map.css">
+    <script src="../../tools/jquery.js"></script>
+</head>
+<body>
+    <div class="gis-map" id="map">
+
+    </div>
+</body>
+<script>
+    //地图中心
+    var MAP_CENTER=[120.249, 30.054];
+    var stationPointLayer=null;
+    var POSITIONS=[[120.249, 30.054],[120.249, 30.1],[120.249, 30.0]];
+//    射向线长度
+    var Q=0.2;
+    require([
+        "dojo/dom",
+        "dojo/on",
+        "dojo/_base/array",
+
+        "hxdiGisModules/MapLoader",
+        "esri/map",
+        "esri/layers/ArcGISTiledMapServiceLayer",
+        "esri/toolbars/draw",
+        "esri/layers/GraphicsLayer",
+        "esri/graphic",
+
+        "esri/geometry/Polygon",
+        "esri/geometry/Circle",
+        "esri/geometry/Point",
+        "esri/geometry/Polyline",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/PictureMarkerSymbol",
+        "esri/symbols/TextSymbol",
+        "esri/symbols/Font",
+        "esri/Color",
+
+        "dojo/domReady!"
+    ], function(
+        dom,on,arrayUtils,MapLoader,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
+        Polygon,Circle,Point,Polyline, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,PictureMarkerSymbol,TextSymbol,Font,Color
+    ){
+        var maploader = new MapLoader();
+        var gisConfig = maploader.getGISConfig();
+        var mapUrl = gisConfig["Map"]["baseMapUrl"];
+        var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
+        MAP_CENTER = gisConfig["Map"]["mapCenter"];
+        var map = new Map("map", {
+            center: MAP_CENTER,
+            zoom: 10,
+            logo:false
+        });
+        map.addLayer(myDynamicMapServiceLayer);
+
+        stationPointLayer = new GraphicsLayer();
+        map.addLayer(stationPointLayer);
+        lineLayer = new GraphicsLayer();
+        map.addLayer(lineLayer);
+        map.on("load",function(){
+            var stationPointSymbol= new PictureMarkerSymbol("/HX-front/img/map/icon-lo.png",22,27);
+            var data=POSITIONS;
+            for(var i=0;i<data.length;i++){
+                var position=[];
+                position.push(data[i][0]);
+                position.push(data[i][1]);
+                var stationPoint = new Point(position);
+                var stationPointGraphic = new Graphic(stationPoint, stationPointSymbol,{'name':"pic"+i,'id':"pic"+i});
+                stationPointLayer.add(stationPointGraphic);
+            }
+            //悬浮样式
+            stationPointLayer.on('mouse-over',function (e) {
+                var id=e.graphic.attributes.id;
+                var graphicArray=e.graphic.getLayer().graphics;
+                arrayUtils.forEach(graphicArray, function(graphic) {
+                    if(graphic.attributes['id']==id){
+                        graphic.setSymbol(new PictureMarkerSymbol("/HX-front/img/map/icon-lo-h.png",25,31));
+                    }
+                });
+            });
+            stationPointLayer.on('mouse-out',function (e) {
+                var id=e.graphic.attributes.id;
+                var graphicArray=e.graphic.getLayer().graphics;
+                arrayUtils.forEach(graphicArray, function(graphic) {
+                    if(graphic.attributes['id']==id){
+                        graphic.setSymbol(new PictureMarkerSymbol("/HX-front/img/map/icon-lo.png",22,27));
+                    }
+                });
+            });
+
+            //添加射向线
+            setInterval(function () {
+                var n=parseInt(Math.random()*10%3);
+                var angle=parseInt(Math.random()*360);
+                console.log(n,angle);
+                arrayUtils.forEach(lineLayer.graphics, function(graphic) {
+                    if(graphic!=undefined){
+                        if(graphic.attributes['id']=="pic"+n){
+                            lineLayer.remove(graphic);
+                        }
+                    }
+                });
+                var locArray=POSITIONS[n];
+                var locArray_1=[];
+                locArray_1.push(Number(locArray[0])+Math.sin(angle * Math.PI / 180)*Q);
+                locArray_1.push(Number(locArray[1])+Math.cos(angle * Math.PI / 180)*Q);
+                var polyline = new Polyline([locArray,locArray_1]);
+                var linesymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+                    new Color([0,255,0]),
+                    3);
+                var linegraphic = new Graphic(polyline, linesymbol,{'id':"pic"+n});
+                lineLayer.add(linegraphic);
+            },200)
+        })
+
+    });
+</script>
+</html>
