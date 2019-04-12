@@ -31,6 +31,13 @@ var commonController = {
          */
         GET_ARCGISTOOLSANDPOINTS:'views/arcgis/arcgis-toolsAndPoints.html',
         /*
+         arcgis规范-轨迹电平模型
+         get
+         params:{}
+         author:xia
+         */
+        GET_ARCGISROUTELEVEL:'views/arcgis/arcgis-routeLevel.html',
+        /*
          arcgis规范-路测轨迹模型
          get
          params:{}
@@ -306,6 +313,11 @@ var commonController = {
     },
     getArcgisToolsAndPoints:function (params,callback) {
         this._ajaxHander.get(this._url.GET_ARCGISTOOLSANDPOINTS,function(data) {
+            callback(data);
+        });
+    },
+    getArcgisRouteLevel:function (params,callback) {
+        this._ajaxHander.get(this._url.GET_ARCGISROUTELEVEL,function(data) {
             callback(data);
         });
     },

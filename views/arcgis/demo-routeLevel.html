@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轨迹电平模型</title>
+    <!--<link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">-->
+    <!--<script src="https://js.arcgis.com/3.27/"></script>-->
+    <script src="../../tools/gis/mapCommon.js"></script>
+    <link rel="stylesheet" href="../../css/map.css">
+    <script src="../../tools/jquery.js"></script>
+</head>
+<body>
+<div class="gis-map" id="map" style="position: relative">
+    <!--<canvas id="level-lengend"></canvas>-->
+</div>
+<script>
+    //地图中心
+    var MAP_CENTER=[120.249, 30.054];
+    var routeLayer=null;
+    var routeArray=[[120.249, 30.054]];
+    var dpvArray=[];
+    var routeColor=['#0001fd','#00649a','#00bf3f','#3bc300','#807e00','#c23c00','#fd0100'];
+    require([
+        "dojo/dom",
+        "dojo/on",
+        "dojo/_base/array",
+
+        "hxdiGisModules/MapLoader",
+        "esri/map",
+        "esri/layers/ArcGISTiledMapServiceLayer",
+        "esri/toolbars/draw",
+        "esri/layers/GraphicsLayer",
+        "esri/graphic",
+
+        "esri/geometry/Polygon",
+        "esri/geometry/Circle",
+        "esri/geometry/Point",
+        "esri/geometry/Polyline",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/PictureMarkerSymbol",
+        "esri/symbols/TextSymbol",
+        "esri/symbols/Font",
+        "esri/Color",
+
+        "dojo/domReady!"
+    ], function(
+        dom,on,arrayUtils,MapLoader,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
+        Polygon,Circle,Point,Polyline, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,PictureMarkerSymbol,TextSymbol,Font,Color
+    ){
+        var maploader = new MapLoader();
+        var gisConfig = maploader.getGISConfig();
+        var mapUrl = gisConfig["Map"]["baseMapUrl"];
+        var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
+        MAP_CENTER = gisConfig["Map"]["mapCenter"];
+        var map = new Map("map", {
+            center: MAP_CENTER,
+            zoom: 10,
+            logo:false
+        });
+        map.addLayer(myDynamicMapServiceLayer);
+
+        routeLayer = new GraphicsLayer();
+        map.addLayer(routeLayer);
+        map.on("load",function(){
+            createLegend(36,160);
+            for(var i=0;i<1000;i++){
+                var n=routeArray.length-1;
+                var temp=[];
+                temp.push(routeArray[n][0]+0.001);
+                temp.push(routeArray[n][1]+0.001);
+                routeArray.push(temp);
+            }
+            for(var j=0;j<=1000;j++){
+                dpvArray.push(Math.random()*120-20);
+            }
+            createPolyLine(routeArray,dpvArray);
+        });
+        function createPolyLine(lineArr,dpvArr) {
+            routeLayer.clear();
+            for(var i=0;i<lineArr.length;i++){
+                var position=new Point(lineArr[i]);
+                var circleMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 4, 0, elecPointColor(dpvArr[i]));
+                var lineGraphic = new Graphic(position,circleMarker);
+                routeLayer.add(lineGraphic);
+            }
+        }
+        function elecPointColor(n) {
+            if(n<0){
+                return new Color(getGradientColor(routeColor[0],routeColor[1],n-(-20)));
+            }else if(n<20){
+                return new Color(getGradientColor(routeColor[1],routeColor[2],n-0));
+            }else if(n<40){
+                return new Color(getGradientColor(routeColor[2],routeColor[3],n-20));
+            }else if(n<60){
+                return new Color(getGradientColor(routeColor[3],routeColor[4],n-40));
+            }else if(n<80){
+                return new Color(getGradientColor(routeColor[4],routeColor[5],n-60));
+            }else{
+                return new Color(getGradientColor(routeColor[5],routeColor[6],n-80));
+            }
+        }
+        function getGradientColor(startColor,endColor,offset) {
+            var sColor = hexToRgb(startColor),
+                eColor = hexToRgb(endColor);
+            //计算R\G\B每一步的差值
+            var rStep = (eColor[0] - sColor[0]) / 20;
+            var gStep = (eColor[1] - sColor[1]) / 20;
+            var bStep = (eColor[2] - sColor[2]) / 20;
+            return rgbToHex(parseInt(rStep*offset+sColor[0]),parseInt(gStep*offset+sColor[1]),parseInt(bStep*offset+sColor[2]))
+        }
+        function rgbToHex(r, g, b)
+        {
+            var hex = ((r<<16) | (g<<8) | b).toString(16);
+            return "#" + new Array(Math.abs(hex.length-7)).join("0") + hex;
+        }
+        function hexToRgb(hex)
+        {
+            var rgb = [];
+            for(var i=1; i<7; i+=2){
+                rgb.push(parseInt("0x" + hex.slice(i,i+2)));
+            }
+            return rgb;
+        }
+        function createLegend(w,h) {
+            var elm=$('<canvas id="level-lengend" height="'+h+'" width="'+w+'" style="position: absolute;bottom: 10px;left: 10px;z-index: 99;"></canvas>');
+            $('#map').append(elm);
+            var can = document.getElementById('level-lengend');
+            var ctx = can.getContext("2d");
+            var lengendGradient=ctx.createLinearGradient(0,0,0,h);
+            lengendGradient.addColorStop(0,"#fd0100");
+            lengendGradient.addColorStop(0.16,"#c23c00");
+            lengendGradient.addColorStop(0.32,"#807e00");
+            lengendGradient.addColorStop(0.48,"#3bc300");
+            lengendGradient.addColorStop(0.64,"#00bf3f");
+            lengendGradient.addColorStop(0.80,"#00649a");
+            lengendGradient.addColorStop(1,"#0001fd");
+            ctx.fillStyle=lengendGradient;
+            ctx.fillRect(0,0,w,h);
+            ctx.fillStyle='#202020';
+            ctx.font = "13px 雅黑";
+            ctx.textAlign='center';
+            for(var i=0;i<7;i++){
+                ctx.fillText(i*20-20, w/2, h-i*h/7-h/20);
+            }
+        }
+    });
+</script>
+</body>
+</html>

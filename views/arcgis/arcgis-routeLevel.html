@@ -1,0 +1,68 @@
+<h2 class="u-ttb2">arcgis - 轨迹电平模型</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>引用模块介绍</dt>
+    <dd>
+		<p>"esri/graphic"-》图层元素</p>
+		<p>"esri/layers/GraphicsLayer"-》graphic元素的集合，可用于监听graphic事件</p>
+        <p>"esri/geometry/Point"-》点对像</p>
+        <p>"esri/symbols/SimpleMarkerSymbol"-》结合Point对象生成绝对尺寸图形</p>
+    </dd>
+    <dt>核心代码</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+        function createPolyLine(lineArr,dpvArr) {
+            routeLayer.clear();
+            for(var i=0;i&lt;lineArr.length;i++){
+                var position=new Point(lineArr[i]);
+                var circleMarker = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 4, 0, elecPointColor(dpvArr[i]));
+                var lineGraphic = new Graphic(position,circleMarker);
+                routeLayer.add(lineGraphic);
+            }
+        }
+        function elecPointColor(n) {
+            if(n<0){
+                return new Color(getGradientColor(routeColor[0],routeColor[1],n-(-20)));
+            }else if(n<20){
+                return new Color(getGradientColor(routeColor[1],routeColor[2],n-0));
+            }else if(n<40){
+                return new Color(getGradientColor(routeColor[2],routeColor[3],n-20));
+            }else if(n<60){
+                return new Color(getGradientColor(routeColor[3],routeColor[4],n-40));
+            }else if(n<80){
+                return new Color(getGradientColor(routeColor[4],routeColor[5],n-60));
+            }else{
+                return new Color(getGradientColor(routeColor[5],routeColor[6],n-80));
+            }
+        }
+        function getGradientColor(startColor,endColor,offset) {
+            var sColor = hexToRgb(startColor),
+                eColor = hexToRgb(endColor);
+            //计算R\G\B每一步的差值
+            var rStep = (eColor[0] - sColor[0]) / 20;
+            var gStep = (eColor[1] - sColor[1]) / 20;
+            var bStep = (eColor[2] - sColor[2]) / 20;
+            return rgbToHex(parseInt(rStep*offset+sColor[0]),parseInt(gStep*offset+sColor[1]),parseInt(bStep*offset+sColor[2]))
+        }
+        function rgbToHex(r, g, b)
+        {
+            var hex = ((r<<16) | (g<<8) | b).toString(16);
+            return "#" + new Array(Math.abs(hex.length-7)).join("0") + hex;
+        }
+        function hexToRgb(hex)
+        {
+            var rgb = [];
+            for(var i=1; i<7; i+=2){
+                rgb.push(parseInt("0x" + hex.slice(i,i+2)));
+            }
+            return rgb;
+        }
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt><a class="hover" href="/HX-front/views/arcgis/demo-routeLevel.html" target="_blank">查看样例</a></dt>
+</dl>
+</div>
