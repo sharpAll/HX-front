@@ -626,14 +626,13 @@ var HXcommon = {
         }
         //背景遮罩层
         var height=ele.innerHeight();
-        var width=ele.innerWidth();
         var loadLayer = $("<div class='loadingLayer'></div>");
         if(HXcommon.legalBrowser()){
             loadLayer.css({
                 zIndex:9998,
                 position: "absolute",
                 height: height + "px",
-                width: width + "px",
+                width: "100%",
                 top: 0,
                 left: 0,
                 background: opt.backgroudColor
