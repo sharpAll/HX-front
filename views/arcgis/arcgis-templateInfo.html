@@ -1,0 +1,45 @@
+<h2 class="u-ttb2">arcgis - 添加悬浮信息框</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>引用模块介绍</dt>
+    <dd>
+		<p>"esri/graphic"-》图层元素</p>
+		<p>"esri/layers/GraphicsLayer"-》graphic元素的集合，可用于监听graphic事件</p>
+        <p>"esri/geometry/Point"-》点对像</p>
+    </dd>
+    <dt>核心代码</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+           stationPointLayer.on('mouse-out',function (e) {
+                templateInfoDel(e);
+            });
+            function templateInfoInit(e) {
+                var geometry = map.toScreen(e.graphic.geometry);
+                var div = dojo.doc.createElement("div");
+                dojo.attr(div, {
+                    id: "text"
+                });
+                dojo.style(div, {
+                    left: geometry.x + 10 + "px",
+                    top: geometry.y + 10 + "px",
+                    position: "absolute",
+                    "z-index": 99,
+                    background: "#fff",
+                    border: "1px solid #0096ff",
+                    padding: "4px 8px 4px",
+                    "font-size": "11px",
+                    "border-radius": "3px",
+                    "box-shadow": "0 0 0.75em #777777"
+                });
+                div.innerHTML = "名称：" + e.graphic.attributes.name + " &lt;br&gt;ID&nbsp;&nbsp;&nbsp; ：" + e.graphic.attributes.id + " &lt;br&gt;状态：" + e.graphic.attributes.status + " &lt;br&gt; ";
+                dom.byId("map").appendChild(div);
+            }
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt><a class="hover" href="/HX-front/views/arcgis/demo-templateInfo.html" target="_blank">查看样例</a></dt>
+</dl>
+</div>

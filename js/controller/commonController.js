@@ -10,12 +10,19 @@ var commonController = {
          */
         GET_ARCGISCIRCLES:'views/arcgis/arcgis-circles.html',
         /*
-         arcgis规范-地理纬度与固定纬度
+         arcgis规范-带属性的标记
          get
          params:{}
          author:xia
          */
         GET_ARCGISPICPOINTS:'views/arcgis/arcgis-picPoints.html',
+        /*
+         arcgis规范-悬浮信息框
+         get
+         params:{}
+         author:xia
+         */
+        GET_ARCGISTEMPLATEINFO:'views/arcgis/arcgis-templateInfo.html',
         /*
          arcgis规范-绘制工具
          get
@@ -303,6 +310,11 @@ var commonController = {
     },
     getArcgisPicPoints:function (params,callback) {
         this._ajaxHander.get(this._url.GET_ARCGISPICPOINTS,function(data) {
+            callback(data);
+        });
+    },
+    getArcgisTemplateInfo:function (params,callback) {
+        this._ajaxHander.get(this._url.GET_ARCGISTEMPLATEINFO,function(data) {
             callback(data);
         });
     },
