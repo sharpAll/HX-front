@@ -641,6 +641,135 @@ var HXwireless = {
             callback(pos,pageItems);
         });
         $dom.trigger('scroll');
+    },
+    YsLine:function (fre,occuThreshold,maxdp,overOccuThreshold) {
+        return Highcharts.chart('ysLineChart', {
+            chart: {
+                zoomType: 'x',
+                backgroundColor:'#fafafa',
+                resetZoomButton:{
+                    position:{
+                        x:0,
+                        y:-10
+                    }
+                }
+            },
+            credits:{
+                enabled:false
+            },
+            title: {
+                text: null
+            },
+            legend:{
+                x:-100
+            },
+            xAxis: {
+                categories: fre,
+                tickInterval:100
+            },
+            plotOptions: {
+                series: {
+                    marker: {
+                        states: {
+                            hover: {
+                                enabled: true
+                            }
+                        }
+                    }
+                }
+            },
+            yAxis: [{ // Primary yAxis
+                min: 0,
+                gridLineWidth: 0,
+                labels: {
+                    style: {
+                        color: '#7995ff'
+                    }
+                },
+                title: {
+                    text: '占用度(%)',
+                    style: {
+                        color: '#7995ff'
+                    }
+                }
+            }, { // Secondary yAxis
+                gridLineWidth: 0,
+                labels: {
+                    style: {
+                        color: '#39ff67'
+                    }
+                },
+                title: {
+                    text: '最大电平(dBuV)',
+                    style: {
+                        color: '#39ff67'
+                    }
+                }
+            }, { // Tertiary yAxis
+                min: 0,
+                allowDecimals:false,
+                gridLineWidth: 0,
+                labels: {
+                    style: {
+                        color: '#ff553c'
+                    }
+                },
+                title: {
+                    text: '超出门限次数',
+                    style: {
+                        color: '#ff553c'
+                    }
+                },
+                opposite: true
+            }],
+            tooltip: {
+                shared: true,
+                useHTML: true,
+                headerFormat: '{point.key}MHz<br/>'
+            },
+            series: [{
+                name: '占用度',
+                color:'#7995ff',
+                lineWidth:1,
+                states:{
+                    hover:{
+                        lineWidth:1
+                    }
+                },
+                type: 'line',
+                tooltip: {
+                    valueSuffix: ' %'
+                },
+                data: occuThreshold
+            }, {
+                name: '最大电平',
+                color:'#39ff67',
+                lineWidth:1,
+                states:{
+                    hover:{
+                        lineWidth:1
+                    }
+                },
+                type: 'line',
+                yAxis: 1,
+                tooltip: {
+                    valueSuffix: ' dBuV'
+                },
+                data: maxdp
+            }, {
+                name: '超出门限次数',
+                color:'#ff553c',
+                lineWidth:1,
+                states:{
+                    hover:{
+                        lineWidth:1
+                    }
+                },
+                type: 'line',
+                yAxis: 2,
+                data: overOccuThreshold
+            }]
+        });
     }
 };
 

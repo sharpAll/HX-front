@@ -1,0 +1,155 @@
+<h2 class="u-ttb2">无线电应用规范 - 多Y轴折线图</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>多Y轴折线图</dt>
+    <dd>
+        <p>用于至少三个Y轴的折线统计图</p>
+        <p>数据颜色与y轴颜色一一对应</p>
+        <p>以下折线图基于highchart</p>
+    </dd>
+    <dt>参数配置</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+	    {
+            chart: {
+                zoomType: 'x',
+                backgroundColor:'#fafafa',
+                resetZoomButton:{
+                    position:{
+                        x:0,
+                        y:-10
+                    }
+                }
+            },
+            credits:{
+                enabled:false
+            },
+            title: {
+                text: null
+            },
+            legend:{
+                x:-100
+            },
+            xAxis: {
+                categories: fre,
+                tickInterval:100
+            },
+            plotOptions: {
+                series: {
+                    marker: {
+                        states: {
+                            hover: {
+                                enabled: true
+                            }
+                        }
+                    }
+                }
+            },
+            yAxis: [{ // Primary yAxis
+                min: 0,
+                gridLineWidth: 0,
+                labels: {
+                    style: {
+                        color: '#7995ff'
+                    }
+                },
+                title: {
+                    text: '占用度(%)',
+                    style: {
+                        color: '#7995ff'
+                    }
+                }
+            }, { // Secondary yAxis
+                gridLineWidth: 0,
+                labels: {
+                    style: {
+                        color: '#39ff67'
+                    }
+                },
+                title: {
+                    text: '最大电平(dBuV)',
+                    style: {
+                        color: '#39ff67'
+                    }
+                }
+            }, { // Tertiary yAxis
+                min: 0,
+                allowDecimals:false,
+                gridLineWidth: 0,
+                labels: {
+                    style: {
+                        color: '#ff553c'
+                    }
+                },
+                title: {
+                    text: '超出门限次数',
+                    style: {
+                        color: '#ff553c'
+                    }
+                },
+                opposite: true
+            }],
+            tooltip: {
+                shared: true,
+                useHTML: true,
+                headerFormat: '{point.key}MHz<br/>'
+            },
+            series: [{
+                name: '占用度',
+                color:'#7995ff',
+                lineWidth:1,
+                states:{
+                    hover:{
+                        lineWidth:1
+                    }
+                },
+                type: 'line',
+                tooltip: {
+                    valueSuffix: ' %'
+                },
+                data: occuThreshold
+            }, {
+                name: '最大电平',
+                color:'#39ff67',
+                lineWidth:1,
+                states:{
+                    hover:{
+                        lineWidth:1
+                    }
+                },
+                type: 'line',
+                yAxis: 1,
+                tooltip: {
+                    valueSuffix: ' dBuV'
+                },
+                data: maxdp
+            }, {
+                name: '超出门限次数',
+                color:'#ff553c',
+                lineWidth:1,
+                states:{
+                    hover:{
+                        lineWidth:1
+                    }
+                },
+                type: 'line',
+                yAxis: 2,
+                data: overOccuThreshold
+            }]
+        }
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt>简单样例</dt>
+    <div id="ysLineChart" style="height: 400px">
+
+    </div>
+	<p>使用时根据业务需求需要适当改造。</p>
+	<script src="tools/Highcharts-5.0.12/highcharts.js"></script>
+    <script src="js/wireless.js"></script>
+    <script src="views/wireless/wireless-YsLine.js"></script>
+</dl>
+</div>

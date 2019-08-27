@@ -94,6 +94,13 @@ var commonController = {
          */
         GET_WIRELESSLINE:'views/wireless/wireless-Line.html',
         /*
+         无线电应用规范-多Y轴折线图
+         get
+         params:{}
+         author:xia
+         */
+        GET_YSLINE:'views/wireless/wireless-YsLine.html',
+        /*
          无线电应用规范-大数据散点图
          get
          params:{}
@@ -240,6 +247,11 @@ var commonController = {
     },
     getWirelessLine: function(params,callback) {
         this._ajaxHander.get(this._url.GET_WIRELESSLINE,function(data) {
+            callback(data);
+        });
+    },
+    getYsLine: function(params,callback) {
+        this._ajaxHander.get(this._url.GET_YSLINE,function(data) {
             callback(data);
         });
     },
