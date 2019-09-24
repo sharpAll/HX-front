@@ -1191,6 +1191,21 @@ var HXcommon = {
             browser = "others";
         }
         return browser;
+    },
+    /*
+     打印html内容
+     content 内容html的id
+     style 风格css
+     */
+    printContent:function (contentId,style) {
+        style=style||'';
+        var printStr = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>"+style+"</head><body >";
+        var content = document.getElementById(contentId).innerHTML;
+        printStr = printStr + content + "</body></html>";
+        var pwin = window.open("Print.htm", "print"); //如果是本地测试，需要先新建Print.htm，如果是在域中使用，则不需要
+        pwin.document.write(printStr);
+        pwin.document.close();
+        pwin.print();
     }
 };
 

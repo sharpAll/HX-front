@@ -184,6 +184,13 @@ var commonController = {
          author:xia
          */
         GET_LOCALSTORAGE:'views/common/common-localstorage.html',
+        /*
+         通用应用规范-localStorage
+         get
+         params:{}
+         author:xia
+         */
+        GET_CONTENTPRINT:'views/common/common-contentprint.html',
     },
     getHtmlStructure : function(params,callback) {
         this._ajaxHander.get(this._url.GET_HTMLSTRUCTURE,function(data) {
@@ -357,6 +364,11 @@ var commonController = {
     },
     getArcgisZoom:function (params,callback) {
         this._ajaxHander.get(this._url.GET_ARCGISZOOM,function(data) {
+            callback(data);
+        });
+    },
+    getContentPrint:function (params,callback) {
+        this._ajaxHander.get(this._url.GET_CONTENTPRINT,function(data) {
             callback(data);
         });
     }
