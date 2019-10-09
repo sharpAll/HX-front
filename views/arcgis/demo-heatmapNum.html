@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>热力图</title>
+    <!--<link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">-->
+    <!--<script src="https://js.arcgis.com/3.27/"></script>-->
+    <script src="../../tools/gis/mapCommon.js"></script>
+    <link rel="stylesheet" href="../../css/map.css">
+    <script src="../../tools/jquery.js"></script>
+</head>
+
+<body>
+<div class="gis-map" id="map"></div>
+</body>
+
+<script>
+    var map;
+    require([
+        "dojo/dom",
+        "dojo/on",
+        "dojo/_base/array",
+
+        "hxdiGisModules/MapLoader",
+        "esri/map",
+        "esri/layers/ArcGISTiledMapServiceLayer",
+        "esri/renderers/HeatmapRenderer",
+        "esri/layers/FeatureLayer",
+        "esri/SpatialReference",
+        "esri/geometry/Point",
+        "esri/graphic",
+
+        "dojo/domReady!"
+    ], function (
+        dom, on, arrayUtils, MapLoader, Map, ArcGISTiledMapServiceLayer, HeatmapRenderer, FeatureLayer, SpatialReference, Point,Graphic
+    ) {
+        var maploader = new MapLoader();
+        var gisConfig = maploader.getGISConfig();
+        var mapUrl = gisConfig["Map"]["baseMapUrl"];
+        MAP_CENTER = gisConfig["Map"]["mapCenter"];
+//        var mapUrl='https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineCommunity/MapServer';
+        var myDynamicMapServiceLayer = new ArcGISTiledMapServiceLayer(mapUrl);
+        var map = new Map("map", {
+            // center: MAP_CENTER,
+            // zoom: 10,
+            center: [120.243, 29.056],
+            zoom: 8,
+            logo: false
+        });
+        map.addLayer(myDynamicMapServiceLayer);
+
+        var layerDefinition = {
+            "geometryType": "esriGeometryPoint",
+            "fields": [{
+                "name": "num",
+                "type": "esriFieldTypeInteger",
+                "alias": "num"
+            }]
+        };
+        var featureCollection = {
+            layerDefinition: layerDefinition,
+            featureSet: null
+        };
+        //创建FeatureLayer图层
+        var featureLayer = new FeatureLayer(featureCollection, {
+            mode: FeatureLayer.MODE_SNAPSHOT,
+            outFields: ["*"],
+            opacity: 1
+        });
+
+        var heatmapRenderer = new HeatmapRenderer({
+            field: "num",
+            colors: ["rgba(255, 0, 0, 0)", "rgb(0, 255, 0)", "rgb(255, 255, 0)", "rgb(255, 0, 0)"],
+            blurRadius: 8,
+            maxPixelIntensity: 230,
+            minPixelIntensity: 10
+        });
+        //设置渲染方式
+        featureLayer.setRenderer(heatmapRenderer);//heatmapRendererhtml中创建的渲染器
+        map.addLayer(featureLayer);
+
+        var heatDataUrl = "https://lxqjss.github.io/data/heatJson2.json";
+        $.getJSON(heatDataUrl,function (data) {
+
+            for (var i = 0; i < data.heatData.length; i++) {
+                var x = data.heatData[i].lng;
+                var y = data.heatData[i].lat;
+                var point = new Point(x, y, new SpatialReference({wkid: 4326}));//初始化起点
+                var graphic =new Graphic(point);
+                graphic.setAttributes( {"num":Number(data.heatData[i].num)});
+                featureLayer.add(graphic);
+            }
+
+        });
+
+    });
+</script>
+</html>
