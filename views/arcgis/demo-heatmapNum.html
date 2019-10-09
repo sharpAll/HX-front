@@ -81,7 +81,7 @@
 
         var heatDataUrl = "https://lxqjss.github.io/data/heatJson2.json";
         $.getJSON(heatDataUrl,function (data) {
-
+            //data=>{"heatData":[{"num":"1","lng":"118.66124335378005","lat":"28.92588513213444"}]}
             for (var i = 0; i < data.heatData.length; i++) {
                 var x = data.heatData[i].lng;
                 var y = data.heatData[i].lat;

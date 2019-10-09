@@ -1,0 +1,110 @@
+<h2 class="u-ttb2">arcgis - 热力图</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>引用模块介绍</dt>
+    <dd>
+		<p>"esri/graphic"-》图层元素</p>
+		<p>"esri/layers/GraphicsLayer"-》graphic元素的集合，可用于监听graphic事件</p>
+        <p>"esri/renderers/HeatmapRenderer"-》热力图渲染</p>
+        <p>"esri/layers/FeatureLayer"-》继承自GraphicsLayer的要素图层，FeatureLayer中的Graphic都是从ArcGIS Server发布的服务中读取出来的。</p>
+        <p>权重热力图在每个坐标点绑定权重，自动热力图根据坐标点的分布形成热力图。</p>
+    </dd>
+    <dt>核心代码</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+            //权重热力图
+          var layerDefinition = {
+            "geometryType": "esriGeometryPoint",
+            "fields": [{
+                "name": "num",
+                "type": "esriFieldTypeInteger",
+                "alias": "num"
+            }]
+        };
+        var featureCollection = {
+            layerDefinition: layerDefinition,
+            featureSet: null
+        };
+        //创建FeatureLayer图层
+        var featureLayer = new FeatureLayer(featureCollection, {
+            mode: FeatureLayer.MODE_SNAPSHOT,
+            outFields: ["*"],
+            opacity: 1
+        });
+
+        var heatmapRenderer = new HeatmapRenderer({
+            field: "num",
+            colors: ["rgba(255, 0, 0, 0)", "rgb(0, 255, 0)", "rgb(255, 255, 0)", "rgb(255, 0, 0)"],
+            blurRadius: 8,
+            maxPixelIntensity: 230,
+            minPixelIntensity: 10
+        });
+        //设置渲染方式
+        featureLayer.setRenderer(heatmapRenderer);//heatmapRendererhtml中创建的渲染器
+        map.addLayer(featureLayer);
+
+        var heatDataUrl = "https://lxqjss.github.io/data/heatJson2.json";
+        $.getJSON(heatDataUrl,function (data) {
+            //data=>{"heatData":[{"num":"1","lng":"118.66124335378005","lat":"28.92588513213444"}]}
+            for (var i = 0; i < data.heatData.length; i++) {
+                var x = data.heatData[i].lng;
+                var y = data.heatData[i].lat;
+                var point = new Point(x, y, new SpatialReference({wkid: 4326}));//初始化起点
+                var graphic =new Graphic(point);
+                graphic.setAttributes( {"num":Number(data.heatData[i].num)});
+                featureLayer.add(graphic);
+            }
+
+        });
+
+        //自动热力图
+        var layerDefinition = {
+            "geometryType": "esriGeometryPoint",
+            "fields": [{
+                "name": "ID",
+                "type": "esriFieldTypeInteger",
+                "alias": "ID"
+            }]
+        };
+        var featureCollection = {
+            layerDefinition: layerDefinition,
+            featureSet: null
+        };
+        //创建FeatureLayer图层
+        var featureLayer = new FeatureLayer(featureCollection, {
+            mode: FeatureLayer.MODE_SNAPSHOT,
+            outFields: ["*"],
+            opacity: 1
+        });
+
+        var heatmapRenderer = new HeatmapRenderer({
+            colors: ["rgba(255, 0, 0, 0)", "rgb(0, 255, 0)", "rgb(255, 255, 0)", "rgb(255, 0, 0)"],
+            blurRadius: 8,
+            maxPixelIntensity: 230,
+            minPixelIntensity: 10
+        });
+        //设置渲染方式
+        featureLayer.setRenderer(heatmapRenderer);//heatmapRendererhtml中创建的渲染器
+        map.addLayer(featureLayer);
+
+        var heatDataUrl = "https://lxqjss.github.io/data/heatJson.json";
+        $.getJSON(heatDataUrl,function (data) {
+            //data=> {"heatData":[{"lng":"118.51293787947446","lat":"28.899562096488552"}]}
+            for (var i = 0; i < data.heatData.length; i++) {
+                var x = data.heatData[i].lng;
+                var y = data.heatData[i].lat;
+                var point = new Point(x, y, new SpatialReference({wkid: 4326}));//初始化起点
+                featureLayer.add(new Graphic(point));
+            }
+
+        });
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt>权重热力图：<a class="hover" href="/HX-front/views/arcgis/demo-heatmapNum.html" target="_blank">查看样例</a></dt>
+    <dt>自动热力图：<a class="hover" href="/HX-front/views/arcgis/demo-heatmapRenderer.html" target="_blank">查看样例</a></dt>
+</dl>
+</div>

@@ -66,6 +66,13 @@ var commonController = {
          */
         GET_ARCGISZOOM:'views/arcgis/arcgis-zoom.html',
         /*
+         arcgis规范-热力图
+         get
+         params:{}
+         author:xia
+         */
+        GET_HEATMAP:'views/arcgis/arcgis-heatmap.html',
+        /*
          无线电应用规范-频率电平图
          get
          params:{}
@@ -364,6 +371,11 @@ var commonController = {
     },
     getArcgisZoom:function (params,callback) {
         this._ajaxHander.get(this._url.GET_ARCGISZOOM,function(data) {
+            callback(data);
+        });
+    },
+    getHeatmap:function (params,callback) {
+        this._ajaxHander.get(this._url.GET_HEATMAP,function(data) {
             callback(data);
         });
     },
