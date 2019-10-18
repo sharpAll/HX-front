@@ -31,6 +31,13 @@ var commonController = {
          */
         GET_ARCGISDRAWTOOLS:'views/arcgis/arcgis-drawTools.html',
         /*
+         arcgis规范-测量工具
+         get
+         params:{}
+         author:xia
+         */
+        GET_ARCGISMESURETOOLS:'views/arcgis/arcgis-mesureTools.html',
+        /*
          arcgis规范-点的框选
          get
          params:{}
@@ -346,6 +353,11 @@ var commonController = {
     },
     getArcgisDrawTools:function (params,callback) {
         this._ajaxHander.get(this._url.GET_ARCGISDRAWTOOLS,function(data) {
+            callback(data);
+        });
+    },
+    getArcgisMesureTools:function (params,callback) {
+        this._ajaxHander.get(this._url.GET_ARCGISMESURETOOLS,function(data) {
             callback(data);
         });
     },

@@ -88,3 +88,28 @@ a,a:hover{color:#333;}
 .gis-map .map-left-box .item-box .tool-box .item.item-3:hover,.gis-map .map-left-box .item-box .tool-box .item.item-3.cur{
     background: no-repeat center url(../img/map/icon-3-h.png);
 }
+
+.gis-map .map-left-box .item-box .map-measure-tools{
+    display: inline-block;
+    background-color: #fafafa;
+    box-shadow: 0 1px 1px 0 #dbdbdb;
+    vertical-align: middle;
+}
+.gis-map .map-left-box .item-box .map-measure-tools .btn-re{
+    padding: 0 8px;
+    height: 25px;
+    line-height: 27px;
+    background: #0098f0;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+    cursor: pointer;
+    border-left: 1px solid #fff;
+    margin-top: 2px;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 8px;
+}
+.gis-map .map-left-box .item-box .map-measure-tools .btn-re:hover{
+    background: #0083df;
+}

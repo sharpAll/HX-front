@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测量工具</title>
+    <!--<link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">-->
+    <!--<script src="https://js.arcgis.com/3.27/"></script>-->
+    <script src="../../tools/gis/mapCommon.js"></script>
+    <link rel="stylesheet" href="../../css/map.css">
+    <script src="../../tools/jquery.js"></script>
+</head>
+<body>
+    <div class="gis-map" id="map">
+        <div class="map-left-box">
+            <div class="item-box">
+                <label>绘制工具</label>
+                <div class="map-measure-tools">
+                    <div class="btn-re" title="距离测量">距离测量</div>
+                    <div class="btn-re" title="面积测量">面积测量</div>
+                    <div class="btn-re" title="清除标记">清除标记</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    //地图中心
+    var MAP_CENTER=[120.249, 30.054];
+    //绘制的图层
+    var mesureDrawLayer=null;
+    require([
+        "dojo/dom",
+        "dojo/on",
+        "dojo/_base/array",
+        "dojo/query",
+
+        "hxdiGisModules/MapLoader",
+        "esri/map",
+        "esri/layers/ArcGISTiledMapServiceLayer",
+        "esri/toolbars/draw",
+        "esri/layers/GraphicsLayer",
+        "esri/graphic",
+
+        "esri/geometry/Polygon",
+        "esri/geometry/Circle",
+        "esri/geometry/Point",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/PictureMarkerSymbol",
+        "esri/symbols/TextSymbol",
+        "esri/symbols/Font",
+        "esri/Color",
+        "esri/tasks/LengthsParameters",
+        "esri/tasks/GeometryService",
+        "esri/geometry/Polyline",
+        "dojo/number",
+        "esri/tasks/AreasAndLengthsParameters",
+        "dojo/dom-attr",
+        "dojo/domReady!"
+    ], function(
+        dom,on,arrayUtils,query,MapLoader,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
+        Polygon,Circle,Point, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,PictureMarkerSymbol,TextSymbol,Font,Color
+        ,LengthsParameters,GeometryService,Polyline,number,AreasAndLengthsParameters,domAttr
+    ){
+        var maploader = new MapLoader();
+        var gisConfig = maploader.getGISConfig();
+        var mapUrl = gisConfig["Map"]["baseMapUrl"];
+        var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
+        MAP_CENTER = gisConfig["Map"]["mapCenter"];
+        var geometryService =new GeometryService("https://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/Geometry/GeometryServer");
+        var map = new Map("map", {
+            center: MAP_CENTER,
+            zoom: 8,
+            logo:false
+        });
+        map.addLayer(myDynamicMapServiceLayer);
+        mesureDrawLayer = new GraphicsLayer();
+        map.addLayer(mesureDrawLayer);
+
+        //toolbar工具条
+        var toolbar = new Draw(map);
+        var totleDistance = 0.0;//总距离
+        var totalGraphic = null;//存储点集合
+        var disFun =false;//距离测量
+        var areaFun = false;//面积测量
+        var inputPoints = [];//存储生成点的集合
+        var startFont = new Font('14px').setWeight(Font.WEIGHT_BOLD);//定义文字样式
+        var makerSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE,8,
+            new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([204,102,51]),1),
+            new Color([158.184,71,0.65]));//定义标记点样式
+        //给按钮添加绑定事件
+        // query(".function-wrap").on("click",function(event){
+        query(".map-measure-tools .btn-re").on("click",function(event){
+            //获得按钮的文本信息
+            var value=domAttr.get(this,"title");
+            switch(value){
+                case "距离测量":
+                    distanceMeasure();
+                    break;
+                case "面积测量":
+                    areaMeasure();
+                    break;
+                case "清除标记":
+                    clearAction();
+                    break;
+            }
+        });
+        //长度量算
+        function distanceMeasure() {
+            map.enableScrollWheelZoom();
+            disFun=true;
+            areaFun=false;
+            toolbar.activate(Draw.POLYLINE);
+        }
+        //面积量算
+        function areaMeasure() {
+            map.enableScrollWheelZoom();
+            disFun=false;
+            areaFun=true;
+            toolbar.activate(Draw.POLYGON);
+        }
+        // 量算功能触发
+        map.on("click",function (evt) {
+            mapClick(evt);
+        });
+        //触发完成的事件
+        toolbar.on("draw-end",function (evt) {
+            addToMap(evt);
+        });
+        //生成两点之间的连线
+        toolbar.setLineSymbol(new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([255,0,0]),2));
+        //量算函数
+        function mapClick(evt) {
+            if(disFun){
+                inputPoints.push(evt.mapPoint);
+                var  textSymbol;
+                if(inputPoints.length ===1){
+                    textSymbol = new TextSymbol("起点",startFont,new Color([204,102,51]));
+                    textSymbol.setOffset(0,-20);
+                    mesureDrawLayer.add(new Graphic(evt.mapPoint,textSymbol));
+                }
+                mesureDrawLayer.add(new Graphic(evt.mapPoint,makerSymbol));
+                if(inputPoints.length >=2){
+                    //    设置距离测量的参数
+                    var  lengthParams = new LengthsParameters();
+                    lengthParams.distanceUnit = GeometryService.UNIT_METER;
+                    lengthParams.calculationType = "preserveShape";
+                    var p1 = inputPoints[inputPoints.length-2];
+                    var p2 = inputPoints[inputPoints.length-1];
+                    if(p1.x ===p2.x &&p1.y===p2.y){
+                        return;
+                    }
+                    //    z在两点之间划线将两点链接起来
+                    var polyline = new Polyline(map.spatialReference);
+                    polyline.addPath([p1,p2]);
+                    lengthParams.polylines=[polyline];
+                    // 根据参数，动态的计算长度
+                    geometryService.lengths(lengthParams,function(distance){
+                        var _distance = number.format(distance.lengths[0]/1000);
+                        totleDistance+=parseFloat(_distance);//计算总长度
+                        var beetwentDistances = _distance+"公里";
+                        var tdistance = new TextSymbol(beetwentDistances,startFont,new Color([204,102,51]));
+                        tdistance.setOffset(40,-3);
+                        mesureDrawLayer.add(new Graphic(p2,tdistance));
+                        if(totalGraphic){
+                            mesureDrawLayer.remove(totalGraphic);
+                        }
+                        var total=number.format(totleDistance,{
+                            pattern:"#.000"
+                        });
+                        //    设置总长度的显示样式，并添加到地图上
+                        var totalSymbol=new TextSymbol("总长度："+total+"公里",startFont,new Color([204,102,51]));
+                        totalSymbol.setOffset(40,-15);
+                        totalGraphic= mesureDrawLayer.add(new Graphic(p2,totalSymbol));
+                    });
+                }
+            }
+        }
+        // 添加图形函数
+        function addToMap(evt) {
+            if(disFun||areaFun){
+                var geometry = evt.geometry;//绘制图形的geometry
+                //将绘制的图形添加到地图上去
+                var symbol = null;
+                switch (geometry.type){
+                    case "point":
+                        symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE,10,
+                            new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([255,0,0]),1),
+                            new Color([0,255,0,0.25]));
+                        break;
+                    case "polyline":
+                        symbol  = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+                            new Color([255,0,0,0.8]),2);
+                        break;
+                    case "polygon":
+                        symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+                            new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([255,0,0]),2),
+                            new Color([255,255,0,0.25]));
+                        break;
+                    case "extent":
+                        symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+                            new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([255,0,0]),2),
+                            new Color([255,255,0,0.25]));
+                        break;
+                }
+                mesureDrawLayer.add(new Graphic(geometry,symbol));
+                if(disFun){
+                    inputPoints.splice(0,inputPoints.length);//删除数组中的所有元素
+                    totleDistance =0.0;
+                    totalGraphic = null;
+                }
+                else if(areaFun){
+                    //设置面积和长度的参数
+                    var areasAndLengthsParameters =new AreasAndLengthsParameters();
+                    areasAndLengthsParameters.lengthUnit = GeometryService.UNIT_METER;//设置距离单位
+                    areasAndLengthsParameters.areaUnit = GeometryService.UNIT_SQUARE_KILOMETERS;//设置面积单位
+                    geometryService.simplify([geometry],function (simplifiedGeometries) {
+                        areasAndLengthsParameters.polygons = simplifiedGeometries;
+                        geometryService.areasAndLengths(areasAndLengthsParameters,function (result) {
+                            var font =new Font("16px",Font.STYLE_NORMAL,Font.VARIANT_NORMAL,Font.WEIGHT_BOLDER);
+                            var areaResult = new TextSymbol(number.format(result.areas[0],{
+                                    pattern:'#.000'
+                                })+"平方公里",font,new Color([204,102,51]));
+                            var spoint = new Point(geometry.getExtent().getCenter().x,geometry.getExtent().getCenter().y,map.spatialReference);
+                            mesureDrawLayer.add(new Graphic(spoint,areaResult));//在地图上显示测量的面积
+                        });
+
+                    });
+                }
+            }
+        }
+        //清空函数
+        function clearAction() {
+            toolbar.deactivate();//撤销地图绘制功能
+            disFun = false;
+            areaFun = false;
+            map.enableScrollWheelZoom();
+            mesureDrawLayer.clear();
+        }
+    });
+</script>
+</html>
