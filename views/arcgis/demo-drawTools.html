@@ -27,9 +27,12 @@
     //地图中心
     var MAP_CENTER=[120.249, 30.054];
     var graphicDraw=null;
+    //绘制的图层
+    var graphicDrawLayer=null;
     require([
         "dojo/dom",
         "dojo/on",
+        "dojo/_base/array",
 
         "hxdiGisModules/MapLoader",
         "esri/map",
@@ -48,24 +51,30 @@
         "esri/symbols/TextSymbol",
         "esri/symbols/Font",
         "esri/Color",
-
+        "esri/tasks/LengthsParameters",
+        "esri/tasks/GeometryService",
+        "esri/geometry/Polyline",
+        "dojo/number",
         "dojo/domReady!"
     ], function(
-        dom,on,MapLoader,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
+        dom,on,arrayUtils,MapLoader,Map,ArcGISTiledMapServiceLayer, Draw,GraphicsLayer,Graphic,
         Polygon,Circle,Point, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol,PictureMarkerSymbol,TextSymbol,Font,Color
+        ,LengthsParameters,GeometryService,Polyline,number
     ){
         var maploader = new MapLoader();
         var gisConfig = maploader.getGISConfig();
         var mapUrl = gisConfig["Map"]["baseMapUrl"];
         var myDynamicMapServiceLayer=new ArcGISTiledMapServiceLayer(mapUrl);
         MAP_CENTER = gisConfig["Map"]["mapCenter"];
+        var geometryService =new GeometryService("https://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/Geometry/GeometryServer");
         var map = new Map("map", {
             center: MAP_CENTER,
             zoom: 8,
             logo:false
         });
         map.addLayer(myDynamicMapServiceLayer);
-
+        graphicDrawLayer = new GraphicsLayer();
+        map.addLayer(graphicDrawLayer);
         //定义一个绘图工具
         var toolBar = new Draw(map);
         //绘制矩形
@@ -75,7 +84,7 @@
                 toolBar.deactivate();
                 $(this).removeClass('cur');
             }else{
-                map.graphics.remove(graphicDraw);
+                graphicDrawLayer.clear();
                 //激活绘图工具，我要绘制一个面图形
                 toolBar.activate(Draw.EXTENT);
                 $('.tool-box .item').removeClass('cur');
@@ -90,13 +99,71 @@
                 toolBar.deactivate();
                 $(this).removeClass('cur');
             }else{
-                map.graphics.remove(graphicDraw);
+                graphicDrawLayer.clear();
                 toolBar.activate(Draw.CIRCLE);
                 $('.tool-box .item').removeClass('cur');
                 $(this).addClass('cur');
+                drawRadius();
             }
 
         });
+        //绘制半径
+        function drawRadius() {
+            var startPoint;
+            var endPoint;
+            var drawRadiusMouseDown=map.on('mouse-down',function (e) {
+                startPoint=e.mapPoint;
+            });
+            var drawRadiusMouseDrag=map.on('mouse-drag',function (e) {
+                var proPoint=e.mapPoint;
+                var p1 = [startPoint.x,startPoint.y];
+                var p2 = [proPoint.x,proPoint.y];
+                var polylineJson = {
+                    "paths":[[p1,p2]],
+                    "spatialReference":{"wkid":map.spatialReference.wkid}
+                };
+                var polyline = new Polyline(polylineJson);
+                var linesymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+                    new Color([0,0,0]),
+                    1);
+                var linegraphic = new Graphic(polyline, linesymbol,{'TYPE':'draw-radius'});
+                arrayUtils.forEach(graphicDrawLayer.graphics, function(graphic) {
+                    console.log(graphic);
+                    if(!!graphic.attributes){
+                        var type=graphic.attributes['TYPE'];
+                        if(type=='draw-radius'){
+                            // graphicDrawLayer.remove(graphic);
+                            graphic.hide();
+                        }
+                    }
+                });
+                graphicDrawLayer.add(linegraphic);
+            });
+            var drawRadiusMouseDragEnd=map.on('mouse-drag-end',function (e) {
+                endPoint=e.mapPoint;
+                var  lengthParams = new LengthsParameters();
+                lengthParams.distanceUnit = GeometryService.UNIT_METER;
+                lengthParams.calculationType = "preserveShape";
+                var p1 = [startPoint.x,startPoint.y];
+                var p2 = [endPoint.x,endPoint.y];
+                var polylineJson = {
+                    "paths":[[p1,p2]],
+                    "spatialReference":{"wkid":map.spatialReference.wkid}
+                };
+                var polyline = new Polyline(polylineJson);
+                lengthParams.polylines=[polyline];
+                geometryService.lengths(lengthParams,function(distance){
+                    var _distance = number.format(distance.lengths[0]/1000);
+                    var  textSymbol;
+                    textSymbol = new TextSymbol("半径："+_distance+'公里', new Font("14px", Font.STYLE_NORMAL, Font.VARIANT_NORMAL, Font.WEIGHT_NORMAL, "微软雅黑"),new Color([0,0,0]));
+                    textSymbol.setOffset(0,10);
+                    graphicDrawLayer.add(new Graphic(startPoint,textSymbol));
+                });
+                drawRadiusMouseDown.remove();
+                drawRadiusMouseDrag.remove();
+                drawRadiusMouseDragEnd.remove();
+            })
+        }
         //绘制多边形
         on(dom.byId("draw-POLYGON"),"click",function(){
             if($(this).hasClass('cur')){
@@ -104,7 +171,7 @@
                 toolBar.deactivate();
                 $(this).removeClass('cur');
             }else{
-                map.graphics.remove(graphicDraw);
+                graphicDrawLayer.clear();
                 toolBar.activate(Draw.POLYGON);
                 $('.tool-box .item').removeClass('cur');
                 $(this).addClass('cur');
@@ -129,7 +196,7 @@
                 "geometry":geometry
             };
             console.log("Xmin："+extentObj.Xmin+" Ymin:"+extentObj.Ymin+" Xmax:"+extentObj.Xmax+" Ymax:"+extentObj.Ymax);
-            map.graphics.add(graphicDraw);//框选结束后在地图上保留框选范围
+            graphicDrawLayer.add(graphicDraw);//框选结束后在地图上保留框选范围
         });
     });
 </script>
