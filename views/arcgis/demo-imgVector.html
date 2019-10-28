@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片流向图</title>
+    <!--<link rel="stylesheet" href="https://js.arcgis.com/3.27/esri/css/esri.css">-->
+    <!--<script src="https://js.arcgis.com/3.27/"></script>-->
+    <script src="../../tools/gis/mapCommon.js"></script>
+    <link rel="stylesheet" href="../../css/map.css">
+    <script src="../../tools/jquery.js"></script>
+</head>
+
+<body>
+<div class="gis-map" id="map"></div>
+</body>
+
+<script>
+    var map;
+    require([
+        "dojo/dom",
+        "dojo/on",
+        "dojo/_base/array",
+
+        "hxdiGisModules/MapLoader",
+        "esri/map",
+        "esri/layers/ArcGISTiledMapServiceLayer",
+        "esri/geometry/Point",
+        "esri/graphic",
+        "esri/Color",
+        "esri/layers/FeatureLayer",
+        "esri/SpatialReference",
+        "esri/renderers/SimpleRenderer", "esri/symbols/SimpleMarkerSymbol","esri/symbols/SimpleLineSymbol",
+        "esri/InfoTemplate",
+
+        "dojo/domReady!"
+    ], function (
+        dom, on, arrayUtils, MapLoader, Map, ArcGISTiledMapServiceLayer, Point,Graphic,Color,
+        FeatureLayer,SpatialReference,SimpleRenderer, SimpleMarkerSymbol,SimpleLineSymbol,InfoTemplate
+    ) {
+        var maploader = new MapLoader();
+        var gisConfig = maploader.getGISConfig();
+        var mapUrl = gisConfig["Map"]["baseMapUrl"];
+        MAP_CENTER = gisConfig["Map"]["mapCenter"];
+        var myDynamicMapServiceLayer = new ArcGISTiledMapServiceLayer(mapUrl);
+        var map = new Map("map", {
+            // center: MAP_CENTER,
+            // zoom: 10,
+            center: [120.243, 29.056],
+            zoom: 8,
+            logo: false
+        });
+        map.addLayer(myDynamicMapServiceLayer);
+
+        var layerDefinition = {
+            "geometryType": "esriGeometryPoint",
+            "fields": [{
+                "name": "sizeInfo"
+            },{
+                "name": "rotationInfo"
+            },{
+                "name": "totalInfo"
+            }]
+        };
+        var featureCollection = {
+            layerDefinition: layerDefinition,
+            featureSet: null
+        };
+        //创建FeatureLayer图层
+        var vectorLayer = new FeatureLayer(featureCollection, {
+            mode: FeatureLayer.MODE_ONDEMAND,
+            outFields: ["*"],
+            opacity: 1,
+            infoTemplate: new InfoTemplate("${areaInfo}",
+                "<table>" +
+                "<tr><td>总量：</td><td>${sizeInfo}</td></tr>" +
+                "<tr><td>流向：</td><td>${rotationInfo}</td></tr>" +
+                "<tr><td>密度：</td><td>${totalInfo}</td></tr>" +
+                "</table>")
+        });
+        var renderer = new SimpleRenderer(new SimpleMarkerSymbol().setPath("M14.5,29 23.5,0 14.5,9 5.5,0z").setOutline(new SimpleLineSymbol().setWidth(0.5)));
+        renderer.setSizeInfo({
+            field: "sizeInfo",
+            minSize: 10,
+            maxSize: 100,
+            minDataValue: 0,
+            maxDataValue: 100
+        });
+        renderer.setRotationInfo({
+            field: "rotationInfo"
+        });
+        renderer.setColorInfo({
+            field: "totalInfo",
+            minDataValue: 0,
+            maxDataValue: 100,
+            colors: [
+                new Color([0,104,214]), new Color([20,120,220]), new Color([39,136,226]),
+                new Color([59,152,232]), new Color([78,169,237]), new Color([98,185,243]),
+                new Color([131,197,181]), new Color([164,210,120]), new Color([197,222,58]),
+                new Color([205,188,80]), new Color([212,155,102]), new Color([220,121,124]),
+                new Color([216,87,115]), new Color([211,53,106]), new Color([206,19,97])
+            ]
+        });
+        vectorLayer.setRenderer(renderer);
+        map.addLayer(vectorLayer);
+        var data={"Data":[{"areaInfo":"杭州站","sizeInfo":"20","rotationInfo":"30","totalInfo":"50","lng":"120.155069","lat":"30.274089"},{"areaInfo":"杭州西站","sizeInfo":"50","rotationInfo":"180","totalInfo":"50","lng":"121.166069","lat":"30.274089"}]};
+        for (var i = 0; i < data.Data.length; i++) {
+            var x = data.Data[i].lng;
+            var y = data.Data[i].lat;
+            var point = new Point(x, y, new SpatialReference({wkid: 4326}));
+            var graphic =new Graphic(point);
+            //必须同时集成所有属性
+            graphic.setAttributes( {"sizeInfo":Number(data.Data[i].sizeInfo),"rotationInfo":Number(data.Data[i].rotationInfo)
+                ,"totalInfo":Number(data.Data[i].totalInfo),"areaInfo":data.Data[i].areaInfo});
+            vectorLayer.add(graphic);
+        }
+    });
+</script>
+</html>

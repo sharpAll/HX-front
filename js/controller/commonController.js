@@ -80,6 +80,13 @@ var commonController = {
          */
         GET_HEATMAP:'views/arcgis/arcgis-heatmap.html',
         /*
+         arcgis规范-流向图
+         get
+         params:{}
+         author:xia
+         */
+        GET_IMGVECTOR:'views/arcgis/arcgis-imgvector.html',
+        /*
          无线电应用规范-频率电平图
          get
          params:{}
@@ -388,6 +395,11 @@ var commonController = {
     },
     getHeatmap:function (params,callback) {
         this._ajaxHander.get(this._url.GET_HEATMAP,function(data) {
+            callback(data);
+        });
+    },
+    getImgVector:function (params,callback) {
+        this._ajaxHander.get(this._url.GET_IMGVECTOR,function(data) {
             callback(data);
         });
     },

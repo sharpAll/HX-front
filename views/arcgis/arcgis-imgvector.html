@@ -1,0 +1,84 @@
+<h2 class="u-ttb2">arcgis - 流向图</h2>
+<div class="u-line"><span class="linea"></span><span class="lineb"></span></div>
+<dl>
+    <dt>引用模块介绍</dt>
+    <dd>
+		<p>"esri/graphic"-》图层元素</p>
+		<p>"esri/layers/GraphicsLayer"-》graphic元素的集合，可用于监听graphic事件</p>
+        <p>"esri/layers/FeatureLayer"-》继承自GraphicsLayer的要素图层，FeatureLayer中的Graphic都是从ArcGIS Server发布的服务中读取出来的。</p>
+        <p>流向图可集成三要素，大小，方向，颜色。</p>
+    </dd>
+    <dt>核心代码</dt>
+    <dd>
+        <pre>
+                            <code class="javascript">
+        var layerDefinition = {
+            "geometryType": "esriGeometryPoint",
+            "fields": [{
+                "name": "sizeInfo"
+            },{
+                "name": "rotationInfo"
+            },{
+                "name": "totalInfo"
+            }]
+        };
+        var featureCollection = {
+            layerDefinition: layerDefinition,
+            featureSet: null
+        };
+        //创建FeatureLayer图层
+        var vectorLayer = new FeatureLayer(featureCollection, {
+            mode: FeatureLayer.MODE_ONDEMAND,
+            outFields: ["*"],
+            opacity: 1,
+            infoTemplate: new InfoTemplate("${areaInfo}",
+                "&lt;table&gt;" +
+                "&lt;tr&gt;&lt;td&gt;总量：&lt;/td&gt;&lt;td&gt;${sizeInfo}&lt;/td&gt;&lt;/tr&gt;" +
+                "&lt;tr&gt;&lt;td&gt;流向：&lt;/td&gt;&lt;td&gt;${rotationInfo}&lt;/td&gt;&lt;/tr&gt;" +
+                "&lt;tr&gt;&lt;td&gt;密度：&lt;/td&gt;&lt;td&gt;${totalInfo}&lt;/td&gt;&lt;/tr&gt;" +
+                "&lt;/table&gt;")
+        });
+        var renderer = new SimpleRenderer(new SimpleMarkerSymbol().setPath("M14.5,29 23.5,0 14.5,9 5.5,0z").setOutline(new SimpleLineSymbol().setWidth(0.5)));
+        renderer.setSizeInfo({
+            field: "sizeInfo",
+            minSize: 10,
+            maxSize: 100,
+            minDataValue: 0,
+            maxDataValue: 100
+        });
+        renderer.setRotationInfo({
+            field: "rotationInfo"
+        });
+        renderer.setColorInfo({
+            field: "totalInfo",
+            minDataValue: 0,
+            maxDataValue: 100,
+            colors: [
+                new Color([0,104,214]), new Color([20,120,220]), new Color([39,136,226]),
+                new Color([59,152,232]), new Color([78,169,237]), new Color([98,185,243]),
+                new Color([131,197,181]), new Color([164,210,120]), new Color([197,222,58]),
+                new Color([205,188,80]), new Color([212,155,102]), new Color([220,121,124]),
+                new Color([216,87,115]), new Color([211,53,106]), new Color([206,19,97])
+            ]
+        });
+        vectorLayer.setRenderer(renderer);
+        map.addLayer(vectorLayer);
+        var data={"Data":[{"areaInfo":"杭州站","sizeInfo":"20","rotationInfo":"30","totalInfo":"50","lng":"120.155069","lat":"30.274089"},{"areaInfo":"杭州西站","sizeInfo":"50","rotationInfo":"180","totalInfo":"50","lng":"121.166069","lat":"30.274089"}]};
+        for (var i = 0; i < data.Data.length; i++) {
+            var x = data.Data[i].lng;
+            var y = data.Data[i].lat;
+            var point = new Point(x, y, new SpatialReference({wkid: 4326}));
+            var graphic =new Graphic(point);
+            //必须同时集成所有属性
+            graphic.setAttributes( {"sizeInfo":Number(data.Data[i].sizeInfo),"rotationInfo":Number(data.Data[i].rotationInfo)
+                ,"totalInfo":Number(data.Data[i].totalInfo),"areaInfo":data.Data[i].areaInfo});
+            vectorLayer.add(graphic);
+        }
+                            </code>
+                            </pre>
+    </dd>
+
+
+    <dt><a class="hover" href="/HX-front/views/arcgis/demo-imgVector.html" target="_blank">查看样例</a></dt>
+</dl>
+</div>
